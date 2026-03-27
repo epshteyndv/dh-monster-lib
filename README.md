@@ -2,6 +2,8 @@
 
 Статический каталог монстров: данные в YAML в репозитории, сайт на **GitHub Pages** (Vite + TypeScript).
 
+**Node.js:** для локальной разработки и CI используйте **Node.js 24** (см. `.nvmrc` и поле `engines` в `package.json`). Если у вас другая версия, `npm` может вывести предупреждение `EBADENGINE` — переключитесь на 24 (например `nvm use` в корне репозитория после установки Node 24).
+
 ## Данные
 
 - Файл **`data/monsters.yaml`** — корневой ключ **`monsters`**: массив объектов.
@@ -55,7 +57,7 @@ npx vite preview
 
 После merge в `main` или `master`:
 
-1. Дождитесь зелёного workflow **Deploy to GitHub Pages** на вкладке Actions.
+1. Дождитесь зелёного workflow **Deploy to GitHub Pages** на вкладке Actions (сборка выполняется на **Node.js 24**).
 2. Откройте URL из **Settings → Pages** (или из summary job **deploy**).
 3. Убедитесь, что загружается список монстров и карточка без ошибки в консоли.
 
