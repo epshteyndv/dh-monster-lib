@@ -9,9 +9,10 @@ const TYPE_LABEL: Record<string, string> = {
 
 function FeatureBlock({ f }: { f: MonsterFeature }): JSX.Element {
   const ty = TYPE_LABEL[f.type] ?? f.type;
+  const v = f.value?.trim();
   const head =
-    f.cost !== undefined
-      ? `${f.name} (${f.cost}) - ${ty}:`
+    v !== undefined && v.length > 0
+      ? `${f.name} (${v}) - ${ty}:`
       : `${f.name} - ${ty}:`;
   return (
     <div>
@@ -29,6 +30,9 @@ export function MonsterCard({ monster }: { monster: Monster }): JSX.Element {
   const { stats } = monster;
   const atk = stats.attack;
   const atkStr = `${atk.atk >= 0 ? "+" : ""}${atk.atk}`;
+  const flavor = monster.flavor?.trim();
+  const motives = monster.motives?.trim();
+  const experienceLines = monster.experience?.filter((s) => s.trim()) ?? [];
 
   return (
     <Card withBorder padding="lg" radius="md" shadow="sm">
@@ -36,16 +40,22 @@ export function MonsterCard({ monster }: { monster: Monster }): JSX.Element {
         <Title order={2} tt="uppercase" fw={800} size="h3">
           {monster.name}
         </Title>
-        <Text fw={700}>{monster.tier}</Text>
-        <Text fs="italic" c="dimmed" size="sm">
-          {monster.flavor}
+        <Text fw={700}>
+          Tier {monster.tier} {monster.role}
         </Text>
-        <Text size="sm">
-          <Text span fw={700}>
-            Motives & Tactics:
-          </Text>{" "}
-          {monster.motives}
-        </Text>
+        {flavor ? (
+          <Text fs="italic" c="dimmed" size="sm">
+            {monster.flavor}
+          </Text>
+        ) : null}
+        {motives ? (
+          <Text size="sm">
+            <Text span fw={700}>
+              Motives & Tactics:
+            </Text>{" "}
+            {motives}
+          </Text>
+        ) : null}
 
         <Paper withBorder p="sm" bg="var(--mantine-color-body)">
           <Stack gap="xs">
@@ -108,12 +118,20 @@ export function MonsterCard({ monster }: { monster: Monster }): JSX.Element {
           </Stack>
         </Paper>
 
-        <Text size="sm">
-          <Text span fw={700}>
-            Experience:
-          </Text>{" "}
-          {monster.experience}
-        </Text>
+        {experienceLines.length > 0 ? (
+          <Stack gap={4}>
+            <Text size="sm" fw={700}>
+              Experience:
+            </Text>
+            <Stack gap={2} pl="md">
+              {experienceLines.map((line, i) => (
+                <Text key={i} size="sm">
+                  • {line.trim()}
+                </Text>
+              ))}
+            </Stack>
+          </Stack>
+        ) : null}
 
         <Title order={5} tt="uppercase" size="sm" mt="xs">
           Features

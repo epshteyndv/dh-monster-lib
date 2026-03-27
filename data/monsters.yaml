@@ -3,10 +3,12 @@
 monsters:
   - id: acid-burrower
     name: ACID BURROWER
-    tier: Tier 1 Solo
+    tier: 1
+    role: Solo
     flavor: A horse-sized insect with digging claws and acidic blood.
     motives: Burrow, drag away, feed, reposition
-    experience: Tremor Sense +2
+    experience:
+      - Tremor Sense +2
     stats:
       difficulty: 14
       thresholds: "8/15"
@@ -19,7 +21,7 @@ monsters:
         damage: 1d12+2 phy
     features:
       - name: Relentless
-        cost: 3
+        value: "3"
         type: passive
         description: >-
           The Burrower can be spotlighted up to three times per GM turn. Spend Fear as usual to spotlight them.
@@ -38,10 +40,12 @@ monsters:
 
   - id: shadow-wisp
     name: SHADOW WISP
-    tier: Tier 1 Horde
+    tier: 1
+    role: Horde
     flavor: A flicker of dark energy that hungers for warmth.
     motives: Harass, obscure, drain
-    experience: Darkvision +2
+    experience:
+      - Darkvision +2
     stats:
       difficulty: 10
       thresholds: "5/12"

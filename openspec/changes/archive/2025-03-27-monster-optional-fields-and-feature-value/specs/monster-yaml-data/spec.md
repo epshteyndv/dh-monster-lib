@@ -1,18 +1,4 @@
-## Requirements
-
-### Requirement: Repository layout for monster data
-
-Monster definitions MUST live under version control as YAML files in the repository. The repository SHALL either use a single aggregate file at `data/monsters.yaml` with a top-level `monsters` array, OR multiple files under `data/monsters/` with one monster per file. The chosen layout MUST be documented in the project README for contributors.
-
-#### Scenario: Single aggregate file
-
-- **WHEN** the project uses `data/monsters.yaml`
-- **THEN** the file MUST parse as YAML and contain a `monsters` key whose value is a sequence of monster objects.
-
-#### Scenario: Directory of files
-
-- **WHEN** the project uses `data/monsters/*.yaml`
-- **THEN** each file MUST parse as YAML and represent one monster object at the document root (not wrapped in a `monsters` array per file).
+## MODIFIED Requirements
 
 ### Requirement: Daggerheart monster card fields
 
@@ -97,17 +83,3 @@ The catalog MUST NOT use deprecated keys `tierLevel` or `tierRole`. The catalog 
 
 - **WHEN** two monster records share the same `id`
 - **THEN** the build step MUST fail with a clear error message identifying the duplicate `id`.
-
-### Requirement: Build-time catalog artifact
-
-The build pipeline MUST produce a JSON catalog (for example `monsters.json`) derived from the YAML source(s), suitable for static hosting alongside the site. The JSON structure MUST expose a list of monster objects equivalent to the merged YAML content after validation. The build MUST run schema validation for Daggerheart card fields before writing the JSON artifact; validation failures MUST abort the build with a non-zero exit code.
-
-#### Scenario: Successful build output
-
-- **WHEN** all YAML sources are valid, `id` values are unique, and every monster conforms to the Daggerheart card field requirement
-- **THEN** the build MUST emit one JSON file consumed by the static site at deploy time.
-
-#### Scenario: Validation failure aborts build
-
-- **WHEN** any monster fails Daggerheart field validation
-- **THEN** the build MUST NOT write a partial `monsters.json` for deployment consumption (the process may emit diagnostics only).
