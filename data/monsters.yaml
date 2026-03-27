@@ -1,12 +1,61 @@
-# Каталог монстров: один файл с массивом `monsters`.
-# Обязательные поля у каждой записи: id (уникальный), name.
+# Каталог монстров: массив `monsters` с карточками в стиле Daggerheart (см. README).
 
 monsters:
-  - id: goblin-scout
-    name: Гоблин-разведчик
-    description: Мелкий вредитель из подземелий.
-    tags: [гуманоид, малый]
+  - id: acid-burrower
+    name: ACID BURROWER
+    tier: Tier 1 Solo
+    flavor: A horse-sized insect with digging claws and acidic blood.
+    motives: Burrow, drag away, feed, reposition
+    experience: Tremor Sense +2
+    stats:
+      difficulty: 14
+      thresholds: "8/15"
+      hp: 8
+      stress: 3
+      attack:
+        atk: 3
+        name: Claws
+        range: Very Close
+        damage: 1d12+2 phy
+    features:
+      - name: Relentless
+        cost: 3
+        type: passive
+        description: >-
+          The Burrower can be spotlighted up to three times per GM turn. Spend Fear as usual to spotlight them.
+      - name: Earth Eruption
+        type: action
+        description: >-
+          Mark a Stress to have the Burrower burst out of the ground. All creatures within Very Close range must succeed on an Agility Reaction Roll or be knocked over, making them Vulnerable until they next act.
+      - name: Spit Acid
+        type: action
+        description: >-
+          Make an attack against all targets in front of the Burrower within Close range. On a success, targets take 2d6 physical damage and must mark an Armor Slot without receiving its benefits.
+      - name: Acid Bath
+        type: reaction
+        description: >-
+          When the Burrower takes Severe damage, all creatures within Close range are bathed in acidic blood, taking 1d10 physical damage.
+
   - id: shadow-wisp
-    name: Тень-искра
-    description: Сгусток тёмной энергии.
-    tags: [нежить, летающий]
+    name: SHADOW WISP
+    tier: Tier 1 Horde
+    flavor: A flicker of dark energy that hungers for warmth.
+    motives: Harass, obscure, drain
+    experience: Darkvision +2
+    stats:
+      difficulty: 10
+      thresholds: "5/12"
+      hp: 4
+      stress: 2
+      attack:
+        atk: 2
+        name: Touch
+        range: Close
+        damage: 1d8+1 mag
+    features:
+      - name: Flicker
+        type: passive
+        description: The wisp may move through solid objects while in darkness.
+      - name: Chill
+        type: action
+        description: Deal 1d6 magic damage to a target within Close range.

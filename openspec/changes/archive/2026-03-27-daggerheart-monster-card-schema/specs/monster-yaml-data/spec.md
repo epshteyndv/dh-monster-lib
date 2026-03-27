@@ -1,18 +1,12 @@
-## Requirements
+## REMOVED Requirements
 
-### Requirement: Repository layout for monster data
+### Requirement: Minimum monster fields
 
-Monster definitions MUST live under version control as YAML files in the repository. The repository SHALL either use a single aggregate file at `data/monsters.yaml` with a top-level `monsters` array, OR multiple files under `data/monsters/` with one monster per file. The chosen layout MUST be documented in the project README for contributors.
+**Reason:** Поля карточки заменены нормативной структурой Daggerheart (тир, блок статов, фичи и т.д.); свободные произвольные поля больше не являются основой модели.
 
-#### Scenario: Single aggregate file
+**Migration:** Для каждой записи задайте `tier`, `flavor`, `motives`, `experience`, вложенный объект `stats` и массив `features` по схеме в ADDED Requirements; поля `description`/`tags` при необходимости перенесите в `flavor` / текст фич.
 
-- **WHEN** the project uses `data/monsters.yaml`
-- **THEN** the file MUST parse as YAML and contain a `monsters` key whose value is a sequence of monster objects.
-
-#### Scenario: Directory of files
-
-- **WHEN** the project uses `data/monsters/*.yaml`
-- **THEN** each file MUST parse as YAML and represent one monster object at the document root (not wrapped in a `monsters` array per file).
+## ADDED Requirements
 
 ### Requirement: Daggerheart monster card fields
 
@@ -59,6 +53,8 @@ Each monster object in the catalog SHALL include the following keys:
 
 - **WHEN** two monster records share the same `id`
 - **THEN** the build step MUST fail with a clear error message identifying the duplicate `id`.
+
+## MODIFIED Requirements
 
 ### Requirement: Build-time catalog artifact
 

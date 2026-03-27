@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import {
   Alert,
   Button,
-  Code,
   Container,
   Grid,
   Group,
@@ -12,18 +11,9 @@ import {
   Text,
   Title,
 } from "@mantine/core";
+import { MonsterCard } from "./components/MonsterCard";
 import { loadCatalog } from "./catalog";
 import type { Monster } from "./types";
-
-function sortedKeys(monster: Monster): string[] {
-  return Object.keys(monster).sort((a, b) => {
-    if (a === "id") return -1;
-    if (b === "id") return 1;
-    if (a === "name") return -1;
-    if (b === "name") return 1;
-    return a.localeCompare(b);
-  });
-}
 
 export function App(): JSX.Element {
   const [loading, setLoading] = useState(true);
@@ -107,36 +97,15 @@ export function App(): JSX.Element {
         </Grid.Col>
 
         <Grid.Col span={{ base: 12, sm: 7 }}>
-          <Paper p="md" withBorder>
-            <Title order={3} size="h4" mb="sm">
-              Карточка
-            </Title>
-            {!selected ? (
+          {!selected ? (
+            <Paper p="md" withBorder>
               <Text c="dimmed" size="sm">
                 Выберите монстра в списке.
               </Text>
-            ) : (
-              <Stack gap="sm">
-                {sortedKeys(selected).map((key) => {
-                  const value = selected[key];
-                  return (
-                    <div key={key}>
-                      <Text size="xs" fw={700} c="dimmed" tt="uppercase">
-                        {key}
-                      </Text>
-                      {value !== null && typeof value === "object" ? (
-                        <Code block mt={4}>
-                          {JSON.stringify(value, null, 2)}
-                        </Code>
-                      ) : (
-                        <Text mt={4}>{String(value)}</Text>
-                      )}
-                    </div>
-                  );
-                })}
-              </Stack>
-            )}
-          </Paper>
+            </Paper>
+          ) : (
+            <MonsterCard monster={selected} />
+          )}
         </Grid.Col>
       </Grid>
     </Container>

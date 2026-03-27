@@ -1,10 +1,11 @@
 /**
- * Читает data/monsters.yaml, проверяет уникальность id и записывает public/monsters.json.
+ * Читает data/monsters.yaml, валидирует карточки Daggerheart, пишет public/monsters.json.
  */
 import { readFile, mkdir, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import YAML from "yaml";
+import { validateMonsterRecord } from "./validate-monster.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, "..");
@@ -28,27 +29,35 @@ if (!doc || typeof doc !== "object" || !Array.isArray(doc.monsters)) {
 
 const seen = new Map();
 const monsters = [];
+const allErrors = [];
 
 for (let i = 0; i < doc.monsters.length; i++) {
   const m = doc.monsters[i];
-  if (!m || typeof m !== "object") {
-    console.error(`monsters[${i}] is not an object`);
-    process.exit(1);
+  const errs = validateMonsterRecord(m, i);
+  if (errs.length) {
+    allErrors.push(...errs);
+    continue;
   }
   if (typeof m.id !== "string" || !m.id.trim()) {
-    console.error(`monsters[${i}] missing string field "id"`);
-    process.exit(1);
-  }
-  if (typeof m.name !== "string" || !m.name.trim()) {
-    console.error(`monsters[${i}] missing string field "name"`);
-    process.exit(1);
+    allErrors.push(`monsters[${i}]: missing string field "id"`);
+    continue;
   }
   if (seen.has(m.id)) {
-    console.error(`Duplicate monster id: "${m.id}" (indices ${seen.get(m.id)} and ${i})`);
-    process.exit(1);
+    allErrors.push(
+      `Duplicate monster id: "${m.id}" (indices ${seen.get(m.id)} and ${i})`
+    );
+    continue;
   }
   seen.set(m.id, i);
   monsters.push(m);
+}
+
+if (allErrors.length) {
+  console.error("Monster validation failed:");
+  for (const line of allErrors) {
+    console.error(`  - ${line}`);
+  }
+  process.exit(1);
 }
 
 await mkdir(outDir, { recursive: true });
