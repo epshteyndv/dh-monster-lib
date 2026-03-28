@@ -5,34 +5,21 @@ import type { Monster } from "../types";
 export type EncounterStore = EncounterState & {
   addMonster: (monster: Monster) => void;
   removeEntry: (instanceId: string) => void;
-  focusEntry: (instanceId: string) => void;
 };
 
 export const useEncounterStore = create<EncounterStore>((set) => ({
   encounter: [],
-  focusedId: null,
   addMonster: (monster) =>
     set((s) => ({
       ...s,
-      ...encounterReducer(
-        { encounter: s.encounter, focusedId: s.focusedId },
-        { type: "ADD", monster }
-      ),
+      ...encounterReducer({ encounter: s.encounter }, { type: "ADD", monster }),
     })),
   removeEntry: (instanceId) =>
     set((s) => ({
       ...s,
       ...encounterReducer(
-        { encounter: s.encounter, focusedId: s.focusedId },
+        { encounter: s.encounter },
         { type: "REMOVE", instanceId }
-      ),
-    })),
-  focusEntry: (instanceId) =>
-    set((s) => ({
-      ...s,
-      ...encounterReducer(
-        { encounter: s.encounter, focusedId: s.focusedId },
-        { type: "FOCUS", instanceId }
       ),
     })),
 }));

@@ -2,13 +2,10 @@ import { useEffect } from "react";
 import {
   Alert,
   Button,
-  CloseButton,
   Container,
-  Grid,
   Group,
   Loader,
   Modal,
-  Paper,
   ScrollArea,
   Stack,
   Text,
@@ -28,10 +25,8 @@ export function App(): JSX.Element {
   const fetchCatalog = useCatalogStore((s) => s.fetchCatalog);
 
   const encounter = useEncounterStore((s) => s.encounter);
-  const focusedId = useEncounterStore((s) => s.focusedId);
   const addMonster = useEncounterStore((s) => s.addMonster);
   const removeEntry = useEncounterStore((s) => s.removeEntry);
-  const focusEntry = useEncounterStore((s) => s.focusEntry);
 
   const [addModalOpened, { open: openAddModal, close: closeAddModal }] =
     useDisclosure(false);
@@ -39,11 +34,6 @@ export function App(): JSX.Element {
   useEffect(() => {
     void fetchCatalog();
   }, [fetchCatalog]);
-
-  const focusedMonster =
-    focusedId === null
-      ? null
-      : encounter.find((e) => e.instanceId === focusedId)?.monster ?? null;
 
   const pickMonster = (m: Monster) => {
     addMonster(m);
@@ -126,71 +116,22 @@ export function App(): JSX.Element {
         </ScrollArea.Autosize>
       </Modal>
 
-      <Grid gutter="md">
-        <Grid.Col span={{ base: 12, sm: 5 }}>
-          <Paper p="md" withBorder>
-            <Title order={3} size="h4" mb="sm">
-              Энкаунтер
-            </Title>
-            {encounter.length === 0 ? (
-              <Text c="dimmed" size="sm">
-                Нажмите «Добавить в энкаунтер» в шапке, чтобы открыть список.
-                Один и тот же монстр можно добавить несколько раз.
-              </Text>
-            ) : (
-              <Stack gap="xs">
-                {encounter.map((e) => (
-                  <Group
-                    key={e.instanceId}
-                    wrap="nowrap"
-                    gap="xs"
-                    align="stretch"
-                  >
-                    <Button
-                      variant={
-                        focusedId === e.instanceId ? "filled" : "light"
-                      }
-                      justify="flex-start"
-                      style={{ flex: 1 }}
-                      onClick={() => focusEntry(e.instanceId)}
-                    >
-                      <Stack gap={2} align="flex-start">
-                        <Text size="sm" fw={600} lh={1.3}>
-                          {e.monster.name}
-                        </Text>
-                        <Text size="xs" c="dimmed" lh={1.2}>
-                          {formatMonsterTierLine(e.monster)}
-                        </Text>
-                      </Stack>
-                    </Button>
-                    <CloseButton
-                      aria-label="Убрать из энкаунтера"
-                      onClick={(ev) => {
-                        ev.stopPropagation();
-                        removeEntry(e.instanceId);
-                      }}
-                    />
-                  </Group>
-                ))}
-              </Stack>
-            )}
-          </Paper>
-        </Grid.Col>
-
-        <Grid.Col span={{ base: 12, sm: 7 }}>
-          {!focusedMonster ? (
-            <Paper p="md" withBorder>
-              <Text c="dimmed" size="sm">
-                {encounter.length === 0
-                  ? "Энкаунтер пуст — добавьте монстров через кнопку в шапке."
-                  : "Выберите экземпляр в энкаунтере, чтобы открыть карточку."}
-              </Text>
-            </Paper>
-          ) : (
-            <MonsterCard monster={focusedMonster} />
-          )}
-        </Grid.Col>
-      </Grid>
+      {encounter.length === 0 ? (
+        <Text c="dimmed" size="sm">
+          Энкаунтер пуст. Нажмите «Добавить в энкаунтер», чтобы выбрать монстров.
+          Один и тот же монстр можно добавить несколько раз.
+        </Text>
+      ) : (
+        <Stack gap="lg">
+          {encounter.map((e) => (
+            <MonsterCard
+              key={e.instanceId}
+              monster={e.monster}
+              onRemoveFromEncounter={() => removeEntry(e.instanceId)}
+            />
+          ))}
+        </Stack>
+      )}
     </Container>
   );
 }

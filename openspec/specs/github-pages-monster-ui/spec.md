@@ -20,7 +20,7 @@ The application MUST support a configurable base path (for example `/repository-
 
 ### Requirement: Monster list and detail view
 
-The application MUST make the full catalog of monsters available for **adding to the encounter** through a **dedicated control in the page header** (for example a button next to the page title). Activating that control MUST open a **dismissible overlay** (for example a modal) that lists all catalog monsters. Each row in that list MUST show the monster **name** and a **tier line** readable as **`Tier {tier} {role}`**. **When** the user selects a monster in that overlay list, the application MUST append a new encounter entry for that monster (without removing prior entries) and MUST **close** the overlay. The main layout MUST still allow viewing monster fields in a readable layout via the encounter-driven detail view (at minimum `id` and `name`, plus additional fields on the card). The application MUST NOT rely on a permanent sidebar catalog whose primary action is click-to-add to the encounter.
+The application MUST make the full catalog of monsters available for **adding to the encounter** through a **dedicated control in the page header** (for example a button next to the page title). Activating that control MUST open a **dismissible overlay** (for example a modal) that lists all catalog monsters. Each row in that list MUST show the monster **name** and a **tier line** readable as **`Tier {tier} {role}`**. **When** the user selects a monster in that overlay list, the application MUST append a new encounter entry for that monster (without removing prior entries) and MUST **close** the overlay. The main layout MUST show each encounter entry as a full **Monster card** on the main page surface in encounter order so that monster fields are readable on each card (at minimum `id` and `name`, plus additional fields on the card); see **Encounter cards and removal**. The application MUST NOT rely on a permanent sidebar catalog whose primary action is click-to-add to the encounter.
 
 #### Scenario: Open add overlay from header
 
@@ -53,12 +53,12 @@ If the catalog JSON cannot be loaded (network error, missing file, or invalid JS
 
 ### Requirement: Mantine for list and detail presentation
 
-The monster **catalog** list (including the list inside the add-to-encounter overlay), the **encounter** list, and the monster detail view SHALL be rendered using **Mantine** components from `@mantine/core` (and **Mantine hooks** such as `@mantine/hooks` where appropriate for overlay state) so that layout and typography are consistent with the Mantine design system.
+The monster **catalog** list (including the list inside the add-to-encounter overlay), each **encounter monster card** on the main surface, and related chrome SHALL be rendered using **Mantine** components from `@mantine/core` (and **Mantine hooks** such as `@mantine/hooks` where appropriate for overlay state) so that layout and typography are consistent with the Mantine design system.
 
 #### Scenario: List and detail use Mantine
 
 - **WHEN** the catalog JSON has loaded successfully
-- **THEN** the add overlay list, encounter list, and visible monster detail SHALL be presented using Mantine components, not plain unstyled HTML blocks without Mantine.
+- **THEN** the add overlay list, encounter cards, and their controls SHALL be presented using Mantine components, not plain unstyled HTML blocks without Mantine.
 
 ### Requirement: Encounter composition
 
@@ -72,35 +72,31 @@ The application SHALL maintain client-side state **encounter**: an ordered seque
 #### Scenario: Instance identity
 
 - **WHEN** two encounter entries reference the same catalog `id`
-- **THEN** the UI MUST still treat them as separate rows (for example separate focus and removal).
+- **THEN** the UI MUST still treat them as separate cards (for example separate removal).
 
-### Requirement: Encounter list and removal
+### Requirement: Encounter cards and removal
 
-The application SHALL render the encounter as an ordered list (or equivalent) showing each entry with enough information to distinguish instances (at minimum monster **name** and **`Tier {tier} {role}`** line). The user MUST be able to **remove** a single entry from the encounter without clearing the entire list unless the encounter becomes empty.
+The application SHALL render every encounter entry as a full **Monster card** on the main page surface in encounter order (for example a vertical stack or responsive grid). There MUST NOT be a separate sidebar whose primary purpose is listing encounter entries for selection. Each monster card MUST expose a **remove** control in the **card header** (for example top-right) that removes **only** that encounter entry. The user MUST be able to remove a single entry without clearing the entire encounter unless it was the last entry.
 
-#### Scenario: Remove one entry
+#### Scenario: Remove one entry from card header
 
-- **WHEN** the user removes one encounter entry
-- **THEN** only that entry MUST be removed; remaining entries MUST stay in order.
+- **WHEN** the user activates the remove control on a specific encounter card
+- **THEN** only that entry MUST be removed; remaining cards MUST stay in order.
 
-### Requirement: Encounter focus and monster card
+#### Scenario: All encounter entries visible
 
-The application SHALL show the **Monster card** detail for at most one **focused** encounter entry at a time. When the user adds an entry from the catalog, focus SHOULD move to that new entry. When the user selects an entry in the encounter list, focus MUST move to that entry. If the encounter is empty, the detail region MUST show an empty state (not a stale card).
-
-#### Scenario: Focus follows add
-
-- **WHEN** the user adds a monster from the catalog
-- **THEN** the detail view MUST show that monster’s card for the newly added entry (or an equivalent explicit focus rule documented in the UI).
-
-#### Scenario: Focus from encounter list
-
-- **WHEN** the encounter has entries and the user selects an entry in the encounter list
-- **THEN** the detail view MUST show the card for that entry’s monster data.
+- **WHEN** the encounter has one or more entries
+- **THEN** the UI MUST show a full monster card for each entry at once (not only one card behind a focus or selection step).
 
 #### Scenario: Empty encounter
 
 - **WHEN** the encounter has no entries
-- **THEN** the detail view MUST NOT display a monster card as if an encounter entry were selected.
+- **THEN** the main surface MUST NOT show monster cards as if entries existed.
+
+#### Scenario: New entry appears as a card
+
+- **WHEN** the user adds a monster from the catalog overlay
+- **THEN** a new full monster card for that entry MUST appear with the others on the main surface.
 
 ### Requirement: Loading and error states with Mantine
 
