@@ -5,15 +5,13 @@ import {
   Container,
   Group,
   Loader,
-  Modal,
-  ScrollArea,
   Stack,
   Text,
   Title,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import { AddMonsterModal } from "./components/AddMonsterModal";
 import { MonsterCard } from "./components/MonsterCard";
-import { formatMonsterTierLine } from "./formatMonsterTierLine";
 import { useCatalogStore } from "./stores/catalogStore";
 import { useEncounterStore } from "./stores/encounterStore";
 import type { Monster } from "./types";
@@ -71,53 +69,12 @@ export function App(): JSX.Element {
         <Button onClick={openAddModal}>Добавить в энкаунтер</Button>
       </Group>
 
-      <Modal
+      <AddMonsterModal
         opened={addModalOpened}
         onClose={closeAddModal}
-        title="Выберите монстра"
-        size="lg"
-        centered
-      >
-        <ScrollArea.Autosize mah="min(70vh, 480px)" type="auto">
-          <Stack gap="xs">
-            {monsters.length === 0 ? (
-              <Text c="dimmed" size="sm">
-                Нет записей. Добавьте монстров в data/monsters.yaml.
-              </Text>
-            ) : (
-              monsters.map((m) => (
-                <Button
-                  key={m.id}
-                  variant="light"
-                  justify="flex-start"
-                  fullWidth
-                  onClick={() => pickMonster(m)}
-                >
-                  <Group
-                    gap={2}
-                    align="center"
-                    justify="space-between"
-                    wrap="nowrap"
-                    style={{ width: "100%" }}
-                  >
-                    <Text
-                      size="sm"
-                      fw={600}
-                      lh={1.3}
-                      style={{ flex: 1, textAlign: "left" }}
-                    >
-                      {m.name}
-                    </Text>
-                    <Text size="xs" c="dimmed" lh={1.2} ta="right">
-                      {formatMonsterTierLine(m)}
-                    </Text>
-                  </Group>
-                </Button>
-              ))
-            )}
-          </Stack>
-        </ScrollArea.Autosize>
-      </Modal>
+        monsters={monsters}
+        onPick={pickMonster}
+      />
 
       {encounter.length === 0 ? (
         <Text c="dimmed" size="sm">
