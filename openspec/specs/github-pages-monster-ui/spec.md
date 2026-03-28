@@ -76,7 +76,7 @@ The application SHALL maintain client-side state **encounter**: an ordered seque
 
 ### Requirement: Encounter state in URL
 
-The application SHALL serialize the encounter’s **catalog identity order** to the page URL so that reloading or opening the same URL restores the same sequence of monsters (including duplicates). Serialization SHALL use a **versioned JSON** payload (extensible for future fields) encoded as **Base64 URL-safe** (no reliance on raw binary in the query string). The encoded value SHALL appear in a single **query parameter** (for example `enc`).
+The application SHALL serialize the encounter’s **catalog identity order** to the page URL so that reloading or opening the same URL restores the same sequence of monsters (including duplicates). Serialization SHALL use a **versioned JSON** payload (extensible for future fields) as a UTF-8 string, then **compressed for the URL** using the **LZString** algorithm via the **`lz-string`** library (for example `compressToEncodedURIComponent` / `decompressFromEncodedURIComponent`), so the value stored in the query string is URL-safe and typically shorter than the prior uncompressed Base64 URL-safe encoding. The encoded value SHALL appear in a single **query parameter** (for example `enc`). The application SHALL NOT be required to decode or migrate links produced by the previous Base64 URL-safe-only encoder.
 
 #### Scenario: Restore after reload
 

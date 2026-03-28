@@ -1,8 +1,16 @@
+import {
+  compressToEncodedURIComponent,
+  decompressFromEncodedURIComponent,
+} from "lz-string";
+
 /** Query param name for the encoded encounter payload. */
 export const ENCOUNTER_URL_PARAM = "enc";
 
-/** Current wire format version; bump when JSON shape changes. */
-export const ENCOUNTER_URL_VERSION = 1;
+/**
+ * Wire format version (JSON payload `v` field). Bump when JSON shape or outer encoding changes.
+ * v1 was Base64 URL-safe; v2+ uses LZString on JSON.
+ */
+export const ENCOUNTER_URL_VERSION = 2;
 
 export type EncounterUrlPayload = {
   v: number;
@@ -12,34 +20,6 @@ export type EncounterUrlPayload = {
 /** Skip writing `enc` if the encoded value would exceed this (typical URL limits). */
 export const MAX_ENCOUNTER_URL_PARAM_LENGTH = 8192;
 
-function utf8ToBase64Url(json: string): string {
-  const bytes = new TextEncoder().encode(json);
-  let binary = "";
-  for (let i = 0; i < bytes.length; i++) {
-    binary += String.fromCharCode(bytes[i]!);
-  }
-  return btoa(binary)
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_")
-    .replace(/=+$/, "");
-}
-
-function base64UrlToUtf8(encoded: string): string | null {
-  let b64 = encoded.replace(/-/g, "+").replace(/_/g, "/");
-  const pad = b64.length % 4;
-  if (pad) b64 += "=".repeat(4 - pad);
-  try {
-    const binary = atob(b64);
-    const bytes = new Uint8Array(binary.length);
-    for (let i = 0; i < binary.length; i++) {
-      bytes[i] = binary.charCodeAt(i);
-    }
-    return new TextDecoder().decode(bytes);
-  } catch {
-    return null;
-  }
-}
-
 function isEncounterUrlPayload(value: unknown): value is EncounterUrlPayload {
   if (value === null || typeof value !== "object") return false;
   const o = value as Record<string, unknown>;
@@ -48,12 +28,12 @@ function isEncounterUrlPayload(value: unknown): value is EncounterUrlPayload {
 }
 
 export function encodeEncounterPayload(payload: EncounterUrlPayload): string {
-  return utf8ToBase64Url(JSON.stringify(payload));
+  return compressToEncodedURIComponent(JSON.stringify(payload));
 }
 
 export function decodeEncounterPayload(encoded: string): EncounterUrlPayload | null {
-  const json = base64UrlToUtf8(encoded.trim());
-  if (!json) return null;
+  const json = decompressFromEncodedURIComponent(encoded.trim());
+  if (json === "") return null;
   try {
     const parsed: unknown = JSON.parse(json);
     if (!isEncounterUrlPayload(parsed)) return null;

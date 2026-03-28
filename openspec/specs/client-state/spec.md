@@ -30,7 +30,7 @@ Store state shapes and public actions SHALL be typed with TypeScript. Components
 
 ### Requirement: Encounter URL codec in client code
 
-The application SHALL implement encoding and decoding of the encounter URL payload in **client-side TypeScript** (together with the Zustand encounter store), using `URLSearchParams` / `history` / `location` APIs appropriate for the static GitHub Pages deployment. The codec MUST be typed and MUST NOT use `any` for the public encode/decode surface.
+The application SHALL implement encoding and decoding of the encounter URL payload in **client-side TypeScript** (together with the Zustand encounter store), using `URLSearchParams` / `history` / `location` APIs appropriate for the static GitHub Pages deployment. The codec MUST be typed and MUST NOT use `any` for the public encode/decode surface. Compression and decompression of the JSON string for the `enc` parameter SHALL use the **`lz-string`** package (LZString), for example `compressToEncodedURIComponent` and `decompressFromEncodedURIComponent`, rather than manual UTF-8 + Base64 URL-safe encoding.
 
 #### Scenario: Typed codec
 
