@@ -13,6 +13,7 @@ import {
 } from "@mantine/core";
 import { MonsterCard } from "./components/MonsterCard";
 import { loadCatalog } from "./catalog";
+import { formatMonsterTierLine } from "./formatMonsterTierLine";
 import type { Monster } from "./types";
 
 export function App(): JSX.Element {
@@ -88,7 +89,14 @@ export function App(): JSX.Element {
                     fullWidth
                     onClick={() => setSelected(m)}
                   >
-                    {m.name}
+                    <Group gap={2} align="center" justify="space-between">
+                      <Text size="sm" fw={600} lh={1.3}>
+                        {m.name}
+                      </Text>
+                      <Text size="xs" c="dimmed" lh={1.2}>
+                        {formatMonsterTierLine(m)}
+                      </Text>
+                    </Group>
                   </Button>
                 ))
               )}
