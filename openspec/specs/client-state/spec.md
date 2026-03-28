@@ -27,3 +27,12 @@ Store state shapes and public actions SHALL be typed with TypeScript. Components
 
 - **WHEN** a component reads encounter or catalog client state
 - **THEN** it MUST use typed store APIs (for example typed `useStore` hooks or selectors) consistent with the declared state and action types.
+
+### Requirement: Encounter URL codec in client code
+
+The application SHALL implement encoding and decoding of the encounter URL payload in **client-side TypeScript** (together with the Zustand encounter store), using `URLSearchParams` / `history` / `location` APIs appropriate for the static GitHub Pages deployment. The codec MUST be typed and MUST NOT use `any` for the public encode/decode surface.
+
+#### Scenario: Typed codec
+
+- **WHEN** the project builds
+- **THEN** the URL encode/decode helpers MUST be part of the typed client source tree and consumable by the encounter store or app shell.

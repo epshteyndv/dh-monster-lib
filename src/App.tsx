@@ -17,6 +17,7 @@ import { formatMonsterTierLine } from "./formatMonsterTierLine";
 import { useCatalogStore } from "./stores/catalogStore";
 import { useEncounterStore } from "./stores/encounterStore";
 import type { Monster } from "./types";
+import { useEncounterUrlSync } from "./useEncounterUrlSync";
 
 export function App(): JSX.Element {
   const monsters = useCatalogStore((s) => s.monsters);
@@ -34,6 +35,8 @@ export function App(): JSX.Element {
   useEffect(() => {
     void fetchCatalog();
   }, [fetchCatalog]);
+
+  useEncounterUrlSync({ loading, monsters });
 
   const pickMonster = (m: Monster) => {
     addMonster(m);
