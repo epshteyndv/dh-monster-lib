@@ -96,7 +96,7 @@ export function AddMonsterModal({
           <Stack gap="xs">
             {!hasCatalog ? (
               <Text c="dimmed" size="sm">
-                Нет записей. Добавьте монстров в data/monsters.yaml.
+                Нет записей. Добавьте YAML с карточками в data/monsters/.
               </Text>
             ) : noMatchesFiltered ? (
               <Text c="dimmed" size="sm">

@@ -1,0 +1,756 @@
+monsters:
+  - id: adult-flickerfly
+    name: ADULT FLICKERFLY
+    tier: 3
+    role: Solo
+    flavor: A winged insect the size of a large house with iridescent scales and wings that move too fast to track.
+    motives: Collect shiny things, hunt, nest, swoop
+    stats:
+      difficulty: 17
+      thresholds: "20/35"
+      hp: 12
+      stress: 6
+      attack:
+        atk: 3
+        name: Wing Slash
+        range: Very Close
+        damage: 3d20 phy
+    features:
+      - name: Relentless (4)
+        type: passive
+        description: The Flickerfly can be spotlighted up to four times per GM turn. Spend Fear as usual to spotlight them.
+      - name: Never Miss
+        type: passive
+        description: When the Flickerfly makes an attack, the target's Evasion is halved against the attack.
+      - name: Deadly Flight
+        type: passive
+        description: While flying, the Flickerfly can move up to Far range instead of Close range before taking an action.
+      - name: Whirlwind
+        type: action
+        description: Spend a Fear to whirl, making an attack against all targets within Very Close range. Targets the Flickerfly succeeds against take 3d8 direct physical damage.
+      - name: Mind Dance
+        type: action
+        description: >-
+          Mark a Stress to create a magically dazzling display that grapples the minds of nearby foes. All targets within Close range must make an Instinct Reaction Roll. For each target who failed, you gain a Fear and the Flickerfly learns one of the target’s fears.
+      - name: Hallucinatory Breath
+        type: action
+        description: >-
+          Countdown (Loop 1d6). When the Flickerfly takes damage for the first time, activate the countdown. When it triggers, the Flickerfly breathes hallucinatory gas on all targets in front of them up to Far range. Targets must make an Instinct Reaction Roll or be tormented by fearful hallucinations. Targets whose fears are known to the Flickerfly have disadvantage on this roll. Targets who fail lose 2 Hope and take 3d8+3 direct magic damage.
+      - name: Uncanny Reflexes
+        type: reaction
+        description: When the Flickerfly takes damage from an attack within Close range, you can mark a Stress to take half damage.
+
+  - id: demon-of-avarice
+    name: DEMON OF AVARICE
+    tier: 3
+    role: Support
+    flavor: A regal cloaked monstrosity with circular horns adorned with treasure.
+    motives: Consume, fuel greed, sow dissent
+    stats:
+      difficulty: 17
+      thresholds: "15/29"
+      hp: 6
+      stress: 5
+      attack:
+        atk: 2
+        name: Hungry Maw
+        range: Melee
+        damage: 3d6+5 mag
+    experience: 
+      - Manipulation +3
+    features:
+      - name: Money Talks
+        type: passive
+        description: >-
+          Attacks against the Demon are made with disadvantage unless the attacker spends a handful of gold. This Demon starts with a number of handfuls equal to the number of PCs. When a target marks HP from the Demon’s standard attack, they can spend a handful of gold instead of marking HP (1 handful per HP). Add a handful of gold to the Demon for each handful of gold spent by PCs on this feature.
+      - name: Numbers Must Go Up
+        type: passive
+        description: Add a bonus to the Demon’s attack rolls equal to the number of handfuls of gold they have.
+      - name: Money Is Time
+        type: action
+        description: Spend 3 handfuls of gold (or a Fear) to spotlight 1d4+1 allies.
+
+  - id: demon-of-despair
+    name: DEMON OF DESPAIR
+    tier: 3
+    role: Skulk
+    flavor: A cloaked demon-creature with long limbs, seeping shadows.
+    motives: Make fear contagious, stick to the shadows, undermine resolve
+    stats:
+      difficulty: 17
+      thresholds: "18/35"
+      hp: 6
+      stress: 5
+      attack:
+        atk: 3
+        name: Miasma Bolt
+        range: Far
+        damage: 3d6+1 mag
+    experience: 
+      - Manipulation +3
+    features:
+      - name: Depths of Despair
+        type: passive
+        description: The Demon deals double damage to PCs with 0 Hope.
+      - name: Your Struggle Is Pointless
+        type: action
+        description: >-
+          Spend a Fear to weigh down the spirits of all PCs within Far range. All targets affected replace their Hope Die with a d8 until they roll a success with Hope or their next rest.
+      - name: Your Friends Will Fail You
+        type: reaction
+        description: >-
+          When a PC fails with Fear, you can mark a Stress to cause all other PCs within Close range to lose a Hope.
+      - name: Momentum
+        type: reaction
+        description: When the Demon makes a successful attack against a PC, you gain a Fear.
+
+  - id: demon-of-hubris
+    name: DEMON OF HUBRIS
+    tier: 3
+    role: Leader
+    flavor: A perfectly beautiful and infinitely cruel demon with a gleaming spear and elegant robes.
+    motives: Condescend, declare premature victory, prove superiority
+    stats:
+      difficulty: 18
+      thresholds: "18/36"
+      hp: 7
+      stress: 5
+      attack:
+        atk: 4
+        name: Perfect Spear
+        range: Very Close
+        damage: 3d10 phy
+    experience: 
+      - Manipulation +2
+    features:
+      - name: Terrifying
+        type: passive
+        description: When the Demon makes a successful attack, all PCs within Far range must lose a Hope and you gain a Fear.
+      - name: Double or Nothing
+        type: passive
+        description: >-
+          When a PC within Far range fails a roll, they can choose to reroll their Fear Die and take the new result. If they still fail, they mark 2 Stress and the Demon clears a Stress.
+      - name: Unparalleled Skill
+        type: action
+        description: Mark a Stress to deal the Demon's standard attack damage to a target within Close range.
+      - name: The Root of Villainy
+        type: action
+        description: Spend a Fear to spotlight two other Demons within Far range.
+      - name: You Pale in Comparison
+        type: reaction
+        description: When a PC fails a roll within Close range of the Demon, they must mark a Stress.
+
+  - id: demon-of-jealousy
+    name: DEMON OF JEALOUSY
+    tier: 3
+    role: Ranged
+    flavor: A fickle creature of spindly limbs and insatiable desires.
+    motives: Join in on others’ success, take what belongs to others, hold grudges
+    stats:
+      difficulty: 17
+      thresholds: "17/30"
+      hp: 6
+      stress: 6
+      attack:
+        atk: 4
+        name: Psychic Assault
+        range: Far
+        damage: 3d8+3 mag
+    experience: 
+      - Manipulation +3
+    features:
+      - name: Unprotected Mind
+        type: passive
+        description: The Demon's standard attack deals direct damage.
+      - name: My Turn
+        type: reaction
+        description: >-
+          When the Demon marks HP from an attack, spend a number of Fear equal to the HP marked by the Demon to cause the attacker to mark the same number of HP.
+      - name: Rivalry
+        type: reaction
+        description: >-
+          When a creature within Close range takes damage from a different adversary, you can mark a Stress to add a d4 to the damage roll.
+      - name: What’s Yours Is Mine
+        type: reaction
+        description: >-
+          When a PC takes Severe damage within Very Close range of the Demon, you can spend a Fear to cause the target to make a Finesse Reaction Roll. On a failure, the Demon seizes one item or consumable of their choice from the target’s inventory.
+
+  - id: demon-of-wrath
+    name: DEMON OF WRATH
+    tier: 3
+    role: Bruiser
+    flavor: A hulking demon with boulder-sized fists, driven by endless rage.
+    motives: Fuel anger, impress rivals, wreak havoc
+    stats:
+      difficulty: 17
+      thresholds: "22/40"
+      hp: 7
+      stress: 5
+      attack:
+        atk: 3
+        name: Fists
+        range: Very Close
+        damage: 3d8+1 mag
+    experience: 
+      - Intimidation +2
+    features:
+      - name: Anger Unrelenting
+        type: passive
+        description: The Demon’s attacks deal direct damage.
+      - name: Battle Lust
+        type: action
+        description: >-
+          Spend a Fear to boil the blood of all PCs within Far range. They use a d20 as their Fear Die until the end of the scene.
+      - name: Retaliation
+        type: reaction
+        description: >-
+          When the Demon takes damage from an attack within Close range, you can mark a Stress to make a standard attack against the attacker.
+      - name: Blood and Souls
+        type: reaction
+        description: >-
+          Countdown (Loop 6). Activate the first time an attack is made within sight of the Demon. It ticks down when a PC takes a violent action. When it triggers, summon 1d4 Minor Demons, who appear at Close range.
+
+  - id: dire-bat
+    name: DIRE BAT
+    tier: 3
+    role: Skulk
+    flavor: A wide-winged pet endlessly loyal to their vampire owner.
+    motives: Dive-bomb, hide, protect leader
+    stats:
+      difficulty: 14
+      thresholds: "16/30"
+      hp: 5
+      stress: 3
+      attack:
+        atk: 2
+        name: Claws and Teeth
+        range: Melee
+        damage: 2d6+7 phy
+    experience: 
+      - Bloodthirsty +3
+    features:
+      - name: Flying
+        type: passive
+        description: While flying, the Bat gains a +3 bonus to their Difficulty.
+      - name: Screech
+        type: action
+        description: Mark a Stress to send a high-pitch screech out toward all targets in front of the Bat within Far range. Those targets must mark 1d4 Stress.
+      - name: Guardian
+        type: reaction
+        description: >-
+          When an allied Vampire marks HP, you can mark a Stress to fly into Melee range of the attacker and make an attack with advantage against them. On a success, deal 2d6+2 physical damage.
+
+  - id: dryad
+    name: DRYAD
+    tier: 3
+    role: Leader
+    flavor: A nature spirit in the form of a humanoid tree.
+    motives: Command, cultivate, drive out, preserve the forest
+    stats:
+      difficulty: 16
+      thresholds: "24/38"
+      hp: 8
+      stress: 5
+      attack:
+        atk: 4
+        name: Deadfall Shortbow
+        range: Far
+        damage: 3d10+1 phy
+    experience: 
+      - Forest Knowledge +4
+    features:
+      - name: Bramble Patch
+        type: action
+        description: >-
+          Mark a Stress to target a point within Far range. Create a patch of thorns that covers an area within Close range of that point. All targets within that area take 2d6+2 physical damage when they act. A target must succeed on a Finesse Roll or deal more than 20 damage to the Dryad with an attack to leave the area.
+      - name: Grow Saplings
+        type: action
+        description: >-
+          Spend a Fear to grow three Treant Sapling Minions, who appear at Close range and immediately take the spotlight.
+      - name: We Are All One
+        type: reaction
+        description: >-
+          When an ally dies within Close range, you can spend a Fear to clear 2 HP and 2 Stress as the fallen ally’s life force is returned to the forest.
+
+  - id: elemental-spark
+    name: ELEMENTAL SPARK
+    tier: 3
+    role: Minion
+    flavor: A blazing mote of elemental fire.
+    motives: Blast, consume, gain mass
+    stats:
+      difficulty: 15
+      thresholds: "None"
+      hp: 1
+      stress: 1
+      attack:
+        atk: 0
+        name: Bursts of Fire
+        range: Close
+        damage: 5 mag
+    features:
+      - name: Minion (9)
+        type: passive
+        description: >-
+          The Elemental is defeated when they take any damage. For every 9 damage a PC deals to the Elemental, defeat an additional Minion within range the attack would succeed against.
+      - name: Group Attack
+        type: action
+        description: >-
+          Spend a Fear to choose a target and spotlight all Elemental Sparks within Close range of them. Those Minions move into Melee range of the target and make one shared attack roll. On a success, they deal 5 physical damage each. Combine this damage.
+
+  - id: greater-earth-elemental
+    name: GREATER EARTH ELEMENTAL
+    tier: 3
+    role: Bruiser
+    flavor: A living landslide of boulders and dust, as large as a house.
+    motives: Avalanche, knock over, pummel
+    stats:
+      difficulty: 17
+      thresholds: "22/40"
+      hp: 10
+      stress: 4
+      attack:
+        atk: 7
+        name: Boulder Fist
+        range: Very Close
+        damage: 3d10+1 phy
+    features:
+      - name: Slow
+        type: passive
+        description: >-
+          When you spotlight the Elemental and they don’t have a token on their stat block, they can’t act yet. Place a token on their stat block and describe what they’re preparing to do. When you spotlight the Elemental and they have a token on their stat block, clear the token and they can act.
+      - name: Crushing Blow
+        type: passive
+        description: >-
+          When the Elemental makes a successful attack, the target must mark an Armor Slot without receiving its benefits (they can still use armor to reduce the damage). If they can’t mark an Armor Slot, they must mark an additional HP.
+      - name: Immovable Object
+        type: passive
+        description: >-
+          An attack that would move the Elemental moves them two fewer ranges (for example, Far becomes Very Close). When the Elemental takes physical damage, reduce it by 7.
+      - name: Rockslide
+        type: action
+        description: >-
+          Mark a Stress to create a rockslide that buries the land in front of Elemental within Close range with rockfall. All targets in this area must make an Agility Reaction Roll (19). Targets who fail take 2d12+5 physical damage and become Vulnerable until their next roll with Hope. Targets who succeed take half damage.
+      - name: Momentum
+        type: reaction
+        description: When the Elemental makes a successful attack against a PC, you gain a Fear.
+
+  - id: greater-water-elemental
+    name: GREATER WATER ELEMENTAL
+    tier: 3
+    role: Support
+    flavor: A huge living wave that crashes down upon enemies.
+    motives: Deluge, disperse, drown
+    stats:
+      difficulty: 17
+      thresholds: "17/34"
+      hp: 5
+      stress: 5
+      attack:
+        atk: 3
+        name: Crashing Wave
+        range: Very Close
+        damage: 3d4+1 mag
+    features:
+      - name: Water Jet
+        type: action
+        description: >-
+          Mark a Stress to attack a target within Very Close range. On a success, deal 2d4+7 physical damage and the target's next action has disadvantage. On a failure, the target must mark a Stress.
+      - name: Drowning Embrace
+        type: action
+        description: >-
+          Spend a Fear to make an attack against all targets within Very Close range. Targets the Elemental succeeds against become Restrained and Vulnerable as they begin drowning. A target can break free, ending both conditions, with a successful Strength or Instinct Roll.
+      - name: High Tide
+        type: reaction
+        description: >-
+          When the Elemental makes a successful standard attack, you can mark a Stress to knock the target back to Close range.
+
+  - id: huge-green-ooze
+    name: HUGE GREEN OOZE
+    tier: 3
+    role: Skulk
+    flavor: A translucent green mound of acid taller than most humans.
+    motives: Camouflage, creep up, envelop, multiply
+    stats:
+      difficulty: 15
+      thresholds: "15/30"
+      hp: 7
+      stress: 4
+      attack:
+        atk: 3
+        name: Ooze Appendage
+        range: Melee
+        damage: 3d8+1 mag
+    experience: 
+      - Blend In +3
+    features:
+      - name: Slow
+        type: passive
+        description: >-
+          When you spotlight the Ooze and they don’t have a token on their stat block, they can’t act yet. Place a token on their stat block and describe what they’re preparing to do. When you spotlight the Ooze and they have a token on their stat block, clear the token and they can act.
+      - name: Acidic Form
+        type: passive
+        description: >-
+          When the Ooze makes a successful attack, the target must mark an Armor Slot without receiving its benefits (they can still use armor to reduce the damage). If they can’t mark an Armor Slot, they must mark an additional HP.
+      - name: Envelop
+        type: action
+        description: >-
+          Make an attack against a target within Melee range. On a success, the Ooze Envelops them and the target must mark 2 Stress. While Enveloped, the target must mark an additional Stress every time they make an action roll. When the Ooze takes Severe damage, all Enveloped targets are freed and the condition is cleared.
+      - name: Split
+        type: reaction
+        description: >-
+          When the Ooze has 4 or more HP marked, you can spend a Fear to split them into two Green Oozes (with no marked HP or Stress). Immediately spotlight both of them.
+
+  - id: hydra
+    name: HYDRA
+    tier: 3
+    role: Solo
+    flavor: A quadrupedal scaled beast with multiple long-necked heads, each filled with menacing fangs.
+    motives: Devour, regenerate, terrify
+    stats:
+      difficulty: 18
+      thresholds: "19/35"
+      hp: 10
+      stress: 5
+      attack:
+        atk: 3
+        name: Bite
+        range: Close
+        damage: 2d12+2 phy
+    features:
+      - name: Many-Headed Menace
+        type: passive
+        description: The Hydra begins with three heads and can have up to five. When the Hydra takes Major or greater damage, they lose a head.
+      - name: Relentless (X)
+        type: passive
+        description: The Hydra can be spotlighted X times per GM turn, where X is the Hydra’s number of heads. Spend Fear as usual to spotlight them.
+      - name: Regeneration
+        type: action
+        description: If the Hydra has any marked HP, spend a Fear to clear a HP and grow two heads.
+      - name: Terrifying Chorus
+        type: action
+        description: All PCs within Far range lose 2 Hope.
+      - name: Magical Weakness
+        type: reaction
+        description: When the Hydra takes magic damage, they become Dazed until the next roll with Fear. While Dazed, they can’t use their Regeneration action but are immune to magic damage.
+
+  - id: monarch
+    name: MONARCH
+    tier: 3
+    role: Social
+    flavor: The sovereign ruler of a nation, wreathed in the privilege of tradition and wielding unmatched power in their domain.
+    motives: Control vassals, destroy rivals, forge a legacy
+    stats:
+      difficulty: 16
+      thresholds: "16/32"
+      hp: 6
+      stress: 5
+      attack:
+        atk: 0
+        name: Warhammer
+        range: Melee
+        damage: 3d6+3 phy
+    experience: 
+      - History +3
+      - Nobility +3
+    features:
+      - name: Execute Them!
+        type: action
+        description: >-
+          Spend a Fear per PC in the party to have the group condemned for crimes real or imagined. A PC who succeeds on a Presence Roll can demand trial by combat or another special form of trial.
+      - name: Crownsguard
+        type: action
+        description: >-
+          Once per scene, mark a Stress to summon six Tier 3 Minions, who appear at Close range to enforce the Monarch’s will.
+      - name: Casus Belli
+        type: reaction
+        description: >-
+          Long-Term Countdown (8). Spend a Fear to activate after the Monarch’s desire for war is first revealed. When it triggers, the Monarch has a reason to rally the nation to war and the support to act on that reason. You gain 1d4 Fear.
+
+  - id: stag-knight
+    name: STAG KNIGHT
+    tier: 3
+    role: Standard
+    flavor: A knight with huge, majestic antlers wearing armor made of dangerous thorns.
+    motives: Isolate, maneuver, protect the forest, weed the unwelcome
+    stats:
+      difficulty: 17
+      thresholds: "19/36"
+      hp: 7
+      stress: 5
+      attack:
+        atk: 3
+        name: Bramble Sword
+        range: Melee
+        damage: 3d8+3 phy
+    experience: 
+      - Forest Knowledge +3
+    features:
+      - name: From Above
+        type: passive
+        description: >-
+          When the Knight succeeds on a standard attack from above a target, they deal 3d12+3 physical damage instead of their standard damage.
+      - name: Blade of the Forest
+        type: action
+        description: >-
+          Spend a Fear to make an attack against all targets within Very Close range. Targets the Knight succeeds against take physical damage equal to 3d4 + the target’s Major threshold.
+      - name: Thorny Armor
+        type: reaction
+        description: >-
+          When the Knight takes damage from an attack within Melee range, you can mark a Stress to deal 1d10+5 physical damage to the attacker.
+
+  - id: oak-treant
+    name: OAK TREANT
+    tier: 3
+    role: Bruiser
+    flavor: A sturdy animate old-growth tree.
+    motives: Hide in plain sight, preserve the forest, root down, swing branches
+    stats:
+      difficulty: 17
+      thresholds: "22/40"
+      hp: 7
+      stress: 4
+      attack:
+        atk: 2
+        name: Branch
+        range: Very Close
+        damage: 3d8+2 phy
+    experience: 
+      - Forest Knowledge +3
+    features:
+      - name: Just a Tree
+        type: passive
+        description: >-
+          Before they make their first attack in a fight or after they become Hidden, the Treant is indistinguishable from other trees until they next act or a PC succeeds on an Instinct Roll to identify them.
+      - name: Seed Barrage
+        type: action
+        description: >-
+          Mark a Stress and make an attack against up to three targets within Close range, pummeling them with giant acorns. Targets the Treant succeeds against take 2d10+5 physical damage.
+      - name: Take Root
+        type: action
+        description: >-
+          Mark a Stress to Root the Treant in place. The Treant is Restrained while Rooted, and can end this effect instead of moving while they are spotlighted. While Rooted, the Treant has resistance to physical damage.
+
+  - id: treant-sapling
+    name: TREANT SAPLING
+    tier: 3
+    role: Minion
+    flavor: A small, sentient tree sapling.
+    motives: Blend in, preserve the forest, pummel, surround
+    stats:
+      difficulty: 14
+      thresholds: "None"
+      hp: 1
+      stress: 1
+      attack:
+        atk: 0
+        name: Branches
+        range: Melee
+        damage: 8 phy
+    features:
+      - name: Minion (6)
+        type: passive
+        description: >-
+          The Sapling is defeated when they take any damage. For every 6 damage a PC deals to the Sapling, defeat an additional Minion within range the attack would succeed against.
+      - name: Group Attack
+        type: action
+        description: >-
+          Spend a Fear to choose a target and spotlight all Treant Saplings within Close range of them. Those Minions move into Melee range of the target and make one shared attack roll. On a success, they deal 8 physical damage each. Combine this damage.
+
+  - id: head-vampire
+    name: HEAD VAMPIRE
+    tier: 3
+    role: Leader
+    flavor: A captivating undead dressed in aristocratic finery.
+    motives: Create thralls, charm, command, fly, intimidate
+    stats:
+      difficulty: 17
+      thresholds: "22/42"
+      hp: 6
+      stress: 6
+      attack:
+        atk: 5
+        name: Rapier
+        range: Melee
+        damage: 2d20+4 phy
+    experience: 
+      - Aristocrat +3
+    features:
+      - name: Terrifying
+        type: passive
+        description: When the Vampire makes a successful attack, all PCs within Far range lose a Hope and you gain a Fear.
+      - name: Look into My Eyes
+        type: passive
+        description: A creature who moves into Melee range of the Vampire must make an Instinct Reaction Roll. On a failure, you gain 1d4 Fear.
+      - name: Feed on Followers
+        type: action
+        description: When the Vampire is within Melee range of an ally, they can cause the ally to mark a HP. The Vampire then clears a HP.
+      - name: The Hunt Is On
+        type: action
+        description: Spend 2 Fear to summon 1d4 Vampires, who appear at Far range and immediately take the spotlight.
+      - name: Lifesuck
+        type: reaction
+        description: When the Vampire is spotlighted, roll a d8. On a result of 6 or higher, all targets within Very Close range must mark a HP.
+
+  - id: vampire
+    name: VAMPIRE
+    tier: 3
+    role: Standard
+    flavor: An intelligent undead with blood-stained lips and a predator’s smile.
+    motives: Bite, charm, deceive, feed, intimidate
+    stats:
+      difficulty: 16
+      thresholds: "18/35"
+      hp: 5
+      stress: 4
+      attack:
+        atk: 3
+        name: Rapier
+        range: Melee
+        damage: 3d8 phy
+    experience: 
+      - Nocturnal Hunter +3
+    features:
+      - name: Draining Bite
+        type: action
+        description: >-
+          Make an attack against a target within Melee range. On a success, deal 5d4 physical damage. A target who marks HP from this attack loses a Hope and must mark a Stress. The Vampire then clears a HP.
+      - name: Mistform
+        type: reaction
+        description: When the Vampire takes physical damage, you can spend a Fear to take half damage.
+
+  - id: vault-guardian-gaoler
+    name: VAULT GUARDIAN GAOLER
+    tier: 3
+    role: Support
+    flavor: A boxy, dust-covered construct with thick metallic swinging doors on their torso.
+    motives: Carry away, entrap, protect, pummel
+    stats:
+      difficulty: 16
+      thresholds: "19/33"
+      hp: 5
+      stress: 3
+      attack:
+        atk: 2
+        name: Body Bash
+        range: Very Close
+        damage: 3d6+2 phy
+    features:
+      - name: Blocking Shield
+        type: passive
+        description: >-
+          Creatures within Melee range of the Gaoler have disadvantage on attack rolls against them. Creatures trapped inside the Gaoler are immune to this feature.
+      - name: Lock Up
+        type: action
+        description: >-
+          Mark a Stress to make an attack against a target within Very Close range. On a success, the target is Restrained within the Gaoler until freed with a successful Strength Roll (18). While Restrained, the target can only attack the Gaoler.
+
+  - id: vault-guardian-sentinel
+    name: VAULT GUARDIAN SENTINEL
+    tier: 3
+    role: Bruiser
+    flavor: A dust-covered golden construct with boxy limbs and a huge mace for a hand.
+    motives: Destroy at any cost, expunge, protect
+    stats:
+      difficulty: 17
+      thresholds: "21/40"
+      hp: 6
+      stress: 3
+      attack:
+        atk: 3
+        name: Charged Mace
+        range: Very Close
+        damage: 2d12+1 phy
+    features:
+      - name: Kinetic Slam
+        type: passive
+        description: Targets who take damage from the Sentinel’s standard attack are knocked back to Very Close range.
+      - name: Box In
+        type: action
+        description: >-
+          Mark a Stress to choose a target within Very Close range to focus on. That target has disadvantage on attack rolls when they’re within Very Close range of the Sentinel. The Sentinel can only focus on one target at a time.
+      - name: Mana Bolt
+        type: action
+        description: >-
+          Spend a Fear to lob explosive magic at a point within Far range. All targets within Very Close range of that point must make an Agility Reaction Roll. Targets who fail take 2d8+20 magic damage and are knocked back to Close range. Targets who succeed take half damage and aren’t knocked back.
+      - name: Momentum
+        type: reaction
+        description: When the Sentinel makes a successful attack against a PC, you gain a Fear.
+
+  - id: vault-guardian-turret
+    name: VAULT GUARDIAN TURRET
+    tier: 3
+    role: Ranged
+    flavor: A massive living turret with reinforced armor and twelve piston-driven mechanical legs.
+    motives: Concentrate fire, lock down, mark, protect
+    stats:
+      difficulty: 16
+      thresholds: "20/32"
+      hp: 5
+      stress: 4
+      attack:
+        atk: 3
+        name: Magitech Cannon
+        range: Far
+        damage: 3d10+3 mag
+    features:
+      - name: Slow Firing
+        type: passive
+        description: >-
+          When you spotlight the Turret and they don’t have a token on their stat block, they can’t make a standard attack. Place a token on their stat block and describe what they’re preparing to do. When you spotlight the Turret and they have a token on their stat block, clear the token and they can attack.
+      - name: Mark Target
+        type: action
+        description: >-
+          Spend a Fear to Mark a target within Far range until the Turret is destroyed or the Marked target becomes Hidden. While the target is Marked, their Evasion is halved.
+      - name: Concentrate Fire
+        type: reaction
+        description: >-
+          When another adversary deals damage to a target within Far range of the Turret, you can mark a Stress to add the Turret’s standard attack damage to the damage roll.
+      - name: Detonation
+        type: reaction
+        description: >-
+          When the Turret is destroyed, they explode. All targets within Close range must make an Agility Reaction Roll. Targets who fail take 3d20 physical damage. Targets who succeed take half damage.
+
+  - id: young-ice-dragon
+    name: YOUNG ICE DRAGON
+    tier: 3
+    role: Solo
+    flavor: A glacier-blue dragon with four powerful limbs and frost-tinged wings.
+    motives: Avalanche, defend lair, fly, freeze, defend what is mine, maul
+    stats:
+      difficulty: 18
+      thresholds: "21/41"
+      hp: 10
+      stress: 6
+      attack:
+        atk: 7
+        name: Bite and Claws
+        range: Close
+        damage: 4d10 phy
+    experience: 
+      - Protect What Is Mine +3
+    features:
+      - name: Relentless (3)
+        type: passive
+        description: The Dragon can be spotlighted up to three times per GM turn. Spend Fear as usual to spotlight them.
+      - name: Rend and Crush
+        type: passive
+        description: If a target damaged by the Dragon doesn’t mark an Armor Slot to reduce the damage, they must mark a Stress.
+      - name: No Hope
+        type: passive
+        description: When a PC rolls with Fear while within Far range of the Dragon, they lose a Hope.
+      - name: Blizzard Breath
+        type: action
+        description: >-
+          Spend 2 Fear to release an icy whorl in front of the Dragon within Close range. All targets in this area must make an Agility Reaction Roll. Targets who fail take 4d6+5 magic damage and are Restrained by ice until they break free with a successful Strength Roll. Targets who succeed must mark 2 Stress or take half damage.
+      - name: Avalanche
+        type: action
+        description: >-
+          Spend a Fear to have the Dragon unleash a huge downfall of snow and ice, covering all other creatures within Far range. All targets within this area must succeed on an Instinct Reaction Roll or be buried in snow and rocks, becoming Vulnerable until they dig themselves out from the debris. For each PC that fails the reaction roll, you gain a Fear.
+      - name: Frozen Scales
+        type: reaction
+        description: >-
+          When a creature makes a successful attack against the Dragon from within Very Close range, they must mark a Stress and become Chilled until their next rest or they clear a Stress. While they are Chilled, they have disadvantage on attack rolls.
+      - name: Momentum
+        type: reaction
+        description: When the Dragon makes a successful attack against a PC, you gain a Fear.
