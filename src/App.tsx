@@ -4,6 +4,7 @@ import {
   Button,
   Container,
   Group,
+  HoverCard,
   Loader,
   Stack,
   Text,
@@ -12,18 +13,19 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import { AddMonsterModal } from "./components/AddMonsterModal";
 import { MonsterCard } from "./components/MonsterCard";
-import { SettingsDrawer } from "./components/SettingsDrawer";
 import {
+  computeBalanceText,
   computeEncounterDifficulty,
   computePartyStrength,
 } from "./encounterDifficulty";
 import { useCatalogStore } from "./stores/catalogStore";
 import { useEncounterStore } from "./stores/encounterStore";
-import { useSettingsStore } from "./stores/settingsStore";
 import type { Monster } from "./types";
 import { useEncounterUrlSync } from "./useEncounterUrlSync";
 
 export function App(): JSX.Element {
+  const partySizes = [3, 4, 5] as const;
+
   const monsters = useCatalogStore((s) => s.monsters);
   const loading = useCatalogStore((s) => s.loading);
   const error = useCatalogStore((s) => s.error);
@@ -32,25 +34,21 @@ export function App(): JSX.Element {
   const encounter = useEncounterStore((s) => s.encounter);
   const addMonster = useEncounterStore((s) => s.addMonster);
   const removeEntry = useEncounterStore((s) => s.removeEntry);
-  const partySize = useSettingsStore((s) => s.partySize);
-  const setPartySize = useSettingsStore((s) => s.setPartySize);
 
   const encounterRoles = useMemo(
     () => encounter.map((e) => e.monster.role),
     [encounter]
   );
-  const encounterDifficulty = useMemo(
-    () => computeEncounterDifficulty(encounterRoles, partySize),
-    [encounterRoles, partySize]
-  );
-  const partyStrength = useMemo(
-    () => computePartyStrength(partySize),
-    [partySize]
+  const hoverMetrics = useMemo(
+    () =>
+      partySizes.map((size) => ({
+        size,
+        balanceText: computeBalanceText(encounterRoles, size),
+      })),
+    [encounterRoles]
   );
 
   const [addModalOpened, { open: openAddModal, close: closeAddModal }] =
-    useDisclosure(false);
-  const [settingsOpened, { open: openSettings, close: closeSettings }] =
     useDisclosure(false);
 
   useEffect(() => {
@@ -87,29 +85,25 @@ export function App(): JSX.Element {
 
   return (
     <Container size="xl" py="md">
-      <Group justify="space-between" align="center" wrap="wrap" gap="sm">
-        <Title order={1}>
-          Энкаунтер
-        </Title>
-
-        <Text size="sm">
-          Сложность:{" "}
-          <Text span fw={700} component="span">
-            {encounterDifficulty}
-          </Text>
-        </Text>
-
-        <Text size="sm">
-          Сила группы:{" "}
-          <Text span fw={700} component="span">
-            {partyStrength}
-          </Text>
-        </Text>
+      <Group justify="space-between" align="center" wrap="wrap" gap="sm" pb={16}>
+        <HoverCard shadow="md" openDelay={100} closeDelay={100} position="bottom-start">
+          <HoverCard.Target>
+            <Title order={1} style={{ cursor: "help" }}>
+              Энкаунтер
+            </Title>
+          </HoverCard.Target>
+          <HoverCard.Dropdown>
+            <Stack gap={4}>
+              {hoverMetrics.map((m) => (
+                <Text size="sm" key={m.size}>
+                  Для {m.size} - {" "} {m.balanceText}
+                </Text>
+              ))}
+            </Stack>
+          </HoverCard.Dropdown>
+        </HoverCard>
 
         <Group>
-          <Button variant="default" onClick={openSettings}>
-            Настройки
-          </Button>
           <Button onClick={openAddModal}>Добавить</Button>
         </Group>
       </Group>
@@ -119,12 +113,6 @@ export function App(): JSX.Element {
         onClose={closeAddModal}
         monsters={monsters}
         onPick={pickMonster}
-      />
-      <SettingsDrawer
-        opened={settingsOpened}
-        onClose={closeSettings}
-        partySize={partySize}
-        onPartySizeChange={setPartySize}
       />
 
       {encounter.length === 0 ? (

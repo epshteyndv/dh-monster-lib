@@ -15,7 +15,7 @@ export function computePartyStrength(partySize: number): number {
 }
 
 export const PARTY_SIZE_MIN = 1;
-export const PARTY_SIZE_MAX = 12;
+export const PARTY_SIZE_MAX = 6;
 
 export function clampPartySize(n: number): number {
   if (!Number.isFinite(n)) return 4;
@@ -60,4 +60,30 @@ export function computeEncounterDifficulty(
   if (!hasBruiserHordeLeaderOrSolo) score -= 1;
 
   return score;
+}
+
+export function computeBalanceText(
+  roles: MonsterRole[],
+  partySize: number
+): string {
+  const strength = computePartyStrength(partySize);
+  const difficulty = computeEncounterDifficulty(roles, partySize);
+  const balance = strength - difficulty;
+  const balanceText = `${difficulty}/${strength}`;
+
+  if (balance > 2)
+    return `слишком легко (${balanceText})`;
+  if (balance > 1)
+    return `очень легко (${balanceText})`;
+  if (balance > 0)
+    return `легко (${balanceText})`;
+
+  if (balance < -2)
+    return `слишком сложно (${balanceText})`;
+  if (balance < -1)
+    return `очень сложно (${balanceText})`;
+  if (balance < 0)
+    return `сложно (${balanceText})`;
+
+  return `Нормально (${balanceText})`;
 }

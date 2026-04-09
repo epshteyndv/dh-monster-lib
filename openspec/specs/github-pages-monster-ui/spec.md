@@ -44,7 +44,7 @@ The application MUST make the full catalog of monsters available for **adding to
 
 ### Requirement: Encounter difficulty and party strength in header
 
-The application SHALL show, in the **header row** of the main catalog/encounter page (alongside the primary page title and the control that opens the add-monster overlay), the current **encounter difficulty** and **party strength**. The user-editable control for **party size** SHALL be provided in the **Settings drawer from header** and not inline in the header itself. Labels MUST be human-readable (consistent with the rest of the UI language). The encounter difficulty MUST be computed from the ordered encounter entries using the role on each entry’s monster and the selected party size, according to the rules below. The party strength MUST equal **`(3 × party size) + 2`** where **party size** is the user-selected positive integer.
+The application SHALL provide encounter metrics from the header through an **on-hover (or focus/tap equivalent) summary attached to the page title `Энкаунтер`**, rather than as always-visible inline metric blocks. The summary MUST include computed values for exactly three fixed party sizes: **3**, **4**, and **5**. For each of these party sizes, the summary MUST show both **encounter difficulty** (computed from the current encounter roles using existing rules) and **party strength** (`3*n + 2`). The application MUST NOT require an always-visible party-size editor in the header for this behavior.
 
 **Difficulty rules** (integer score; apply in order conceptually, all additions and penalties are to the same running total):
 
@@ -67,33 +67,15 @@ The application SHALL show, in the **header row** of the main catalog/encounter 
 - **WHEN** the user sets party size to a positive integer `n`
 - **THEN** the displayed party strength MUST be `3 * n + 2`.
 
-#### Scenario: Header shows metrics while settings are elsewhere
+#### Scenario: Hover summary shows 3/4/5
 
-- **WHEN** the catalog has loaded and the main page header is visible
-- **THEN** the header MUST show encounter difficulty and party strength, while party size editing is available via the settings drawer.
+- **WHEN** the user hovers (or otherwise opens the title summary UI) on `Энкаунтер`
+- **THEN** the UI MUST display rows for party sizes 3, 4, and 5 with both difficulty and party strength values.
 
-### Requirement: Settings drawer from header
+#### Scenario: Header remains uncluttered
 
-The application SHALL provide a **settings drawer** anchored to the **left** side of the viewport. The drawer SHALL be reachable from the main page header via an explicit settings control (for example a button or icon button). Opening the drawer MUST NOT navigate away from the page and MUST preserve current encounter entries.
-
-#### Scenario: Open settings drawer
-
-- **WHEN** the user activates the settings control in the header
-- **THEN** a left-side drawer with editable settings MUST open.
-
-### Requirement: Party size edited in settings drawer
-
-The user-editable control for **party size** SHALL be located in the settings drawer (not inline in the header row). Changing party size in the drawer MUST update encounter difficulty and party strength displayed in the header immediately.
-
-#### Scenario: Party size moved out of header
-
-- **WHEN** the main page header is visible
-- **THEN** the header MUST show encounter metrics but MUST NOT provide direct inline editing for party size.
-
-#### Scenario: Drawer change updates header metrics
-
-- **WHEN** the user changes party size in the settings drawer
-- **THEN** displayed encounter difficulty and party strength MUST update without a full page reload.
+- **WHEN** the user views the header without opening the summary
+- **THEN** difficulty/strength values MUST NOT be rendered as permanent inline text blocks in the header row.
 
 ### Requirement: Add overlay catalog filters
 
