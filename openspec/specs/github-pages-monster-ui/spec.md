@@ -20,7 +20,7 @@ The application MUST support a configurable base path (for example `/repository-
 
 ### Requirement: Monster list and detail view
 
-The application MUST make the full catalog of monsters available for **adding to the encounter** through a **dedicated control in the page header** (for example a button next to the page title). Activating that control MUST open a **dismissible overlay** (for example a modal) that lists catalog monsters available for selection. The overlay MUST implement **Add overlay catalog filters** so the user MAY narrow the list by tier and role as specified there. Each row in the filtered list MUST show the monster **name** and a **tier line** readable as **`Tier {tier} {role}`**. **When** the user selects a monster in that overlay list, the application MUST append a new encounter entry for that monster (without removing prior entries) and MUST **close** the overlay. The main layout MUST show each encounter entry as a full **Monster card** on the main page surface in encounter order so that monster fields are readable on each card (at minimum `id` and `name`, plus additional fields on the card); see **Encounter cards and removal**. The application MUST NOT rely on a permanent sidebar catalog whose primary action is click-to-add to the encounter. The **page header** MUST also implement **Encounter difficulty and party strength in header** so encounter difficulty, party strength, and party size selection appear in the same header region as the add-to-encounter control.
+The application MUST make the full catalog of monsters available for **adding to the encounter** through a **dedicated control in the page header** (for example a button next to the page title). Activating that control MUST open a **dismissible overlay** (for example a modal) that lists catalog monsters available for selection. The overlay MUST implement **Add overlay catalog filters** so the user MAY narrow the list by tier and role as specified there. Each row in the filtered list MUST show the monster **name** and a **tier line** readable as **`Tier {tier} {role}`**. **When** the user selects a monster in that overlay list, the application MUST append a new encounter entry for that monster (without removing prior entries) and MUST **close** the overlay. The main layout MUST show encounter monsters as full **Monster cards** on the main page surface, where entries with the same catalog monster `id` MAY be represented by a single shared full card that contains multiple per-instance sections; see **Encounter cards and removal**. The application MUST NOT rely on a permanent sidebar catalog whose primary action is click-to-add to the encounter. The **page header** MUST also implement **Encounter difficulty and party strength in header** so encounter difficulty, party strength, and party size selection appear in the same header region as the add-to-encounter control.
 
 #### Scenario: Open add overlay from header
 
@@ -136,7 +136,7 @@ The application SHALL maintain client-side state **encounter**: an ordered seque
 #### Scenario: Instance identity
 
 - **WHEN** two encounter entries reference the same catalog `id`
-- **THEN** the UI MUST still treat them as separate cards (for example separate removal).
+- **THEN** the UI MUST still provide separate removal controls for each entry instance even if entries are rendered inside one shared card.
 
 ### Requirement: Encounter state in URL
 
@@ -168,27 +168,27 @@ Updates to the encounter-driven query parameter SHALL use **`history.replaceStat
 
 ### Requirement: Encounter cards and removal
 
-The application SHALL render every encounter entry as a full **Monster card** on the main page surface in encounter order (for example a vertical stack or responsive grid). There MUST NOT be a separate sidebar whose primary purpose is listing encounter entries for selection. Each monster card MUST expose a **remove** control in the **card header** (for example top-right) that removes **only** that encounter entry. The user MUST be able to remove a single entry without clearing the entire encounter unless it was the last entry.
+The application SHALL render encounter monsters as full **Monster cards** on the main page surface. When the encounter contains multiple entries with the same catalog monster `id`, the UI MUST render a single full monster card for that `id` and include separate per-instance sections inside that card. Each per-instance section MUST include the monster name and a **remove** control that removes only that specific encounter entry. There MUST NOT be a separate sidebar whose primary purpose is listing encounter entries for selection. The user MUST be able to remove a single entry without clearing the entire encounter unless it was the last entry.
 
-#### Scenario: Remove one entry from card header
+#### Scenario: Remove one duplicate instance from shared card
 
-- **WHEN** the user activates the remove control on a specific encounter card
-- **THEN** only that entry MUST be removed; remaining cards MUST stay in order.
+- **WHEN** the user activates remove in one per-instance section of a shared card
+- **THEN** only that corresponding encounter entry MUST be removed, and other instances of the same monster MUST remain.
 
-#### Scenario: All encounter entries visible
+#### Scenario: Shared card for duplicates
 
-- **WHEN** the encounter has one or more entries
-- **THEN** the UI MUST show a full monster card for each entry at once (not only one card behind a focus or selection step).
+- **WHEN** the encounter has two or more entries with the same monster `id`
+- **THEN** the UI MUST show one full monster card for that monster plus multiple per-instance sections (one per entry).
 
 #### Scenario: Empty encounter
 
 - **WHEN** the encounter has no entries
 - **THEN** the main surface MUST NOT show monster cards as if entries existed.
 
-#### Scenario: New entry appears as a card
+#### Scenario: First and repeated add behavior
 
-- **WHEN** the user adds a monster from the catalog overlay
-- **THEN** a new full monster card for that entry MUST appear with the others on the main surface.
+- **WHEN** the user adds a monster that is not yet in the encounter, then adds the same monster again
+- **THEN** the first add MUST create one card with one per-instance section, and the second add MUST increase sections in that same card rather than creating a second full duplicate card.
 
 ### Requirement: Loading and error states with Mantine
 

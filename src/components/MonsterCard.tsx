@@ -30,10 +30,10 @@ function FeatureBlock({ f }: { f: MonsterFeature }): JSX.Element {
 
 export function MonsterCard({
   monster,
-  onRemoveFromEncounter,
+  encounterInstances,
 }: {
   monster: Monster;
-  onRemoveFromEncounter?: () => void;
+  encounterInstances: { instanceId: string; onRemove: () => void }[];
 }): JSX.Element {
   const { stats } = monster;
   const atk = stats.attack;
@@ -44,26 +44,26 @@ export function MonsterCard({
 
   return (
     <Card withBorder padding="lg" radius="md" shadow="sm">
-      <Card.Section withBorder inheritPadding py="xs">
-        <Group justify="space-between" align="flex-start" wrap="nowrap" gap="xs">
-          <Title
-            order={2}
-            tt="uppercase"
-            fw={800}
-            size="h3"
-            style={{ flex: 1, minWidth: 0 }}
-          >
-            {monster.name}
-          </Title>
-
-          {onRemoveFromEncounter ? (
+      {encounterInstances.map((instance, index) => (
+        <Card.Section key={instance.instanceId} withBorder inheritPadding py="xs">
+          <Group justify="space-between" align="flex-start" wrap="nowrap" gap="xs">
+            <Title
+              order={2}
+              tt="uppercase"
+              fw={800}
+              size="h4"
+              style={{ flex: 1, minWidth: 0 }}
+            >
+              {monster.name} #{index + 1}
+            </Title>
+  
             <CloseButton
               aria-label="Убрать из энкаунтера"
-              onClick={onRemoveFromEncounter}
+              onClick={instance.onRemove}
             />
-          ) : null}
-        </Group>
-      </Card.Section>
+          </Group>
+        </Card.Section>
+      ))}
 
       <Stack gap="xs" pt="xs">
         <Text fw={700}>{formatMonsterTierLine(monster)}</Text>

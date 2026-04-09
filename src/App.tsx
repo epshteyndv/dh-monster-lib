@@ -23,6 +23,11 @@ import { useEncounterStore } from "./stores/encounterStore";
 import type { Monster } from "./types";
 import { useEncounterUrlSync } from "./useEncounterUrlSync";
 
+type EncounterGroup = {
+  monster: Monster;
+  instances: { instanceId: string }[];
+};
+
 export function App(): JSX.Element {
   const partySizes = [3, 4, 5] as const;
 
@@ -47,6 +52,25 @@ export function App(): JSX.Element {
       })),
     [encounterRoles]
   );
+  const encounterGroups = useMemo(() => {
+    const groups: EncounterGroup[] = [];
+    const byMonsterId = new Map<string, EncounterGroup>();
+    for (const entry of encounter) {
+      const key = entry.monster.id;
+      const existing = byMonsterId.get(key);
+      if (existing) {
+        existing.instances.push({ instanceId: entry.instanceId });
+        continue;
+      }
+      const nextGroup: EncounterGroup = {
+        monster: entry.monster,
+        instances: [{ instanceId: entry.instanceId }],
+      };
+      byMonsterId.set(key, nextGroup);
+      groups.push(nextGroup);
+    }
+    return groups;
+  }, [encounter]);
 
   const [addModalOpened, { open: openAddModal, close: closeAddModal }] =
     useDisclosure(false);
@@ -122,11 +146,14 @@ export function App(): JSX.Element {
         </Text>
       ) : (
         <Stack gap="lg">
-          {encounter.map((e) => (
+          {encounterGroups.map((group) => (
             <MonsterCard
-              key={e.instanceId}
-              monster={e.monster}
-              onRemoveFromEncounter={() => removeEntry(e.instanceId)}
+              key={group.monster.id}
+              monster={group.monster}
+              encounterInstances={group.instances.map((instance) => ({
+                instanceId: instance.instanceId,
+                onRemove: () => removeEntry(instance.instanceId),
+              }))}
             />
           ))}
         </Stack>
