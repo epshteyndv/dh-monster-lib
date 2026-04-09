@@ -44,7 +44,7 @@ export function MonsterCard({
 
   return (
     <Card withBorder padding="lg" radius="md" shadow="sm">
-      <Stack gap="sm">
+      <Card.Section withBorder inheritPadding py="xs">
         <Group justify="space-between" align="flex-start" wrap="nowrap" gap="xs">
           <Title
             order={2}
@@ -55,6 +55,7 @@ export function MonsterCard({
           >
             {monster.name}
           </Title>
+
           {onRemoveFromEncounter ? (
             <CloseButton
               aria-label="Убрать из энкаунтера"
@@ -62,12 +63,17 @@ export function MonsterCard({
             />
           ) : null}
         </Group>
+      </Card.Section>
+
+      <Stack gap="xs" pt="xs">
         <Text fw={700}>{formatMonsterTierLine(monster)}</Text>
+
         {flavor ? (
           <Text fs="italic" c="dimmed" size="sm">
             {monster.flavor}
           </Text>
         ) : null}
+
         {motives ? (
           <Text size="sm">
             <Text span fw={700}>
@@ -151,7 +157,8 @@ export function MonsterCard({
         <Title order={5} tt="uppercase" size="sm" mt="xs">
           Features
         </Title>
-        <Stack gap="sm">
+
+        <Stack gap="xs">
           {monster.features.map((f, i) => (
             <FeatureBlock key={`${f.name}-${i}`} f={f} />
           ))}
