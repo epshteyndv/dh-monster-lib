@@ -3,8 +3,14 @@ import {
   decompressFromEncodedURIComponent,
 } from "lz-string";
 
-/** Query param name for the encoded encounter payload. */
+/** Query param name for the encoded encounter payload (normal browsing). */
 export const ENCOUNTER_URL_PARAM = "enc";
+
+/**
+ * Query param for one-shot share links. Same payload encoding as {@link ENCOUNTER_URL_PARAM};
+ * after load the app replaces the URL with `enc` only.
+ */
+export const ENCOUNTER_SHARE_URL_PARAM = "share";
 
 /**
  * Wire format version (JSON payload `v` field). Bump when JSON shape or outer encoding changes.

@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Alert,
   Button,
@@ -13,11 +13,13 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import { AddMonsterModal } from "./components/AddMonsterModal";
 import { MonsterCard } from "./components/MonsterCard";
+import { computeBalanceText } from "./encounterDifficulty";
 import {
-  computeBalanceText,
-  computeEncounterDifficulty,
-  computePartyStrength,
-} from "./encounterDifficulty";
+  ENCOUNTER_SHARE_URL_PARAM,
+  encodeEncounterPayload,
+  encounterToPayload,
+  MAX_ENCOUNTER_URL_PARAM_LENGTH,
+} from "./encounterUrlCodec";
 import { useCatalogStore } from "./stores/catalogStore";
 import { useEncounterStore } from "./stores/encounterStore";
 import type { Monster } from "./types";
@@ -28,7 +30,7 @@ type EncounterGroup = {
   instances: { instanceId: string }[];
 };
 
-export function App(): JSX.Element {
+export function EncounterPage(): JSX.Element {
   const partySizes = [3, 4, 5] as const;
 
   const monsters = useCatalogStore((s) => s.monsters);
@@ -52,6 +54,14 @@ export function App(): JSX.Element {
       })),
     [encounterRoles]
   );
+  const [shareHint, setShareHint] = useState<string | null>(null);
+
+  const shareUrlTooLong = useMemo(() => {
+    const ids = encounter.map((e) => e.monster.id);
+    const encoded = encodeEncounterPayload(encounterToPayload(ids));
+    return encoded.length > MAX_ENCOUNTER_URL_PARAM_LENGTH;
+  }, [encounter]);
+
   const encounterGroups = useMemo(() => {
     const groups: EncounterGroup[] = [];
     const byMonsterId = new Map<string, EncounterGroup>();
@@ -85,6 +95,28 @@ export function App(): JSX.Element {
     addMonster(m);
     closeAddModal();
   };
+
+  const copyShareLink = useCallback(async () => {
+    if (shareUrlTooLong) return;
+    const ids = encounter.map((e) => e.monster.id);
+    const encoded = encodeEncounterPayload(encounterToPayload(ids));
+    const url = new URL(
+      `${window.location.origin}${window.location.pathname}`
+    );
+    url.searchParams.set(ENCOUNTER_SHARE_URL_PARAM, encoded);
+    try {
+      await navigator.clipboard.writeText(url.toString());
+      setShareHint("Ссылка скопирована");
+    } catch {
+      setShareHint("Не удалось скопировать в буфер");
+    }
+  }, [encounter, shareUrlTooLong]);
+
+  useEffect(() => {
+    if (!shareHint) return;
+    const t = window.setTimeout(() => setShareHint(null), 2500);
+    return () => window.clearTimeout(t);
+  }, [shareHint]);
 
   if (loading) {
     return (
@@ -128,9 +160,27 @@ export function App(): JSX.Element {
         </HoverCard>
 
         <Group>
+          <Button
+            variant="default"
+            disabled={shareUrlTooLong}
+            title={
+              shareUrlTooLong
+                ? "Слишком длинный энкаунтер для ссылки в URL"
+                : "Скопировать ссылку для открытия энкаунтера у других"
+            }
+            onClick={() => void copyShareLink()}
+          >
+            Поделиться
+          </Button>
           <Button onClick={openAddModal}>Добавить</Button>
         </Group>
       </Group>
+
+      {shareHint ? (
+        <Text size="sm" mb="xs">
+          {shareHint}
+        </Text>
+      ) : null}
 
       <AddMonsterModal
         opened={addModalOpened}
