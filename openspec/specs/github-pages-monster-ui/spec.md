@@ -79,27 +79,27 @@ The application SHALL provide encounter metrics from the header through an **on-
 
 ### Requirement: Add overlay catalog filters
 
-The add-to-encounter overlay (modal opened from the header control) SHALL provide **filter controls** for **tier** and **role** independently. The user SHALL be able to select **zero or more** tier values and **zero or more** role values. Tier and role options SHALL reflect the catalog’s structured fields (`tier` as integer, `role` as the catalog role enum). When **no** tier value is selected in the tier filter, the tier SHALL NOT restrict which monsters are listed; when **no** role value is selected in the role filter, the role SHALL NOT restrict the list. When one or more tier values are selected, a monster SHALL be listed only if its `tier` equals one of the selected tier values; when one or more role values are selected, a monster SHALL be listed only if its `role` equals one of the selected role values. When both filters have selections, a monster SHALL be shown only if it satisfies **both** the tier and role constraints (logical AND between the two axes). Row presentation (name and tier line) SHALL remain consistent with **Monster list and detail view**.
+The add-to-encounter overlay (modal opened from the header control) SHALL provide filter controls for **tier** and **role** independently, but each filter SHALL allow selecting **at most one value at a time** (single-select). Tier and role options SHALL reflect the catalog’s structured fields (`tier` as integer, `role` as the catalog role enum). When no tier value is selected, tier SHALL NOT restrict the list; when no role value is selected, role SHALL NOT restrict the list. When both filters have selected values, a monster SHALL be shown only if it matches both selected values (logical AND between axes). Row presentation (name and tier line) SHALL remain consistent with **Monster list and detail view**.
 
-#### Scenario: Filter by tier only
+#### Scenario: Single tier filter value
 
-- **WHEN** the user selects one or more tier values and selects no role filter values
-- **THEN** the overlay list SHALL show only monsters whose `tier` is among the selected tiers (and SHALL show every such monster from the loaded catalog).
+- **WHEN** the user selects one tier value and no role value
+- **THEN** the overlay list SHALL show only monsters whose `tier` equals the selected tier.
 
-#### Scenario: Filter by role only
+#### Scenario: Single role filter value
 
-- **WHEN** the user selects one or more role values and selects no tier filter values
-- **THEN** the overlay list SHALL show only monsters whose `role` is among the selected roles.
+- **WHEN** the user selects one role value and no tier value
+- **THEN** the overlay list SHALL show only monsters whose `role` equals the selected role.
 
-#### Scenario: Combined tier and role filters
+#### Scenario: Combined single-value filters
 
-- **WHEN** the user selects at least one tier and at least one role
-- **THEN** each listed monster SHALL match both a selected tier and a selected role.
+- **WHEN** the user selects one tier value and one role value
+- **THEN** each listed monster SHALL match both selected values.
 
-#### Scenario: No filters
+#### Scenario: Clear filter
 
-- **WHEN** the user has not selected any tier filter value and has not selected any role filter value
-- **THEN** the overlay SHALL list all catalog monsters (subject to the same empty-catalog messaging as before).
+- **WHEN** the user clears either filter
+- **THEN** that axis SHALL return to "no restriction" behavior.
 
 #### Scenario: No matching monsters
 

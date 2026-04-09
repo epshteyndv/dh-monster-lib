@@ -3,7 +3,7 @@ import {
   Button,
   Group,
   Modal,
-  MultiSelect,
+  Select,
   ScrollArea,
   Stack,
   Text,
@@ -24,13 +24,13 @@ export function AddMonsterModal({
   monsters,
   onPick,
 }: AddMonsterModalProps): JSX.Element {
-  const [tierValues, setTierValues] = useState<string[]>([]);
-  const [roleValues, setRoleValues] = useState<string[]>([]);
+  const [tierValue, setTierValue] = useState<string | null>(null);
+  const [roleValue, setRoleValue] = useState<string | null>(null);
 
   useEffect(() => {
     if (!opened) {
-      setTierValues([]);
-      setRoleValues([]);
+      setTierValue(null);
+      setRoleValue(null);
     }
   }, [opened]);
 
@@ -52,16 +52,15 @@ export function AddMonsterModal({
 
   const filtered = useMemo(() => {
     return monsters.filter((m) => {
-      const tierOk =
-        tierValues.length === 0 || tierValues.includes(String(m.tier));
-      const roleOk = roleValues.length === 0 || roleValues.includes(m.role);
+      const tierOk = tierValue === null || String(m.tier) === tierValue;
+      const roleOk = roleValue === null || m.role === roleValue;
       return tierOk && roleOk;
     });
-  }, [monsters, tierValues, roleValues]);
+  }, [monsters, tierValue, roleValue]);
 
   const hasCatalog = monsters.length > 0;
   const noMatchesFiltered =
-    hasCatalog && filtered.length === 0 && (tierValues.length > 0 || roleValues.length > 0);
+    hasCatalog && filtered.length === 0 && (tierValue !== null || roleValue !== null);
 
   return (
     <Modal
@@ -74,20 +73,20 @@ export function AddMonsterModal({
       <Stack gap="sm">
         {hasCatalog ? (
           <>
-            <MultiSelect
+            <Select
               label="Tier"
               placeholder="Любой"
               data={tierOptions}
-              value={tierValues}
-              onChange={setTierValues}
+              value={tierValue}
+              onChange={setTierValue}
               clearable
             />
-            <MultiSelect
+            <Select
               label="Role"
               placeholder="Любой"
               data={roleOptions}
-              value={roleValues}
-              onChange={setRoleValues}
+              value={roleValue}
+              onChange={setRoleValue}
               clearable
             />
           </>
