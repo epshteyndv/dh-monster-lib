@@ -5,23 +5,21 @@ import {
   Container,
   Group,
   Loader,
-  NumberInput,
   Stack,
-  Slider,
   Text,
   Title,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { AddMonsterModal } from "./components/AddMonsterModal";
 import { MonsterCard } from "./components/MonsterCard";
+import { SettingsDrawer } from "./components/SettingsDrawer";
 import {
   computeEncounterDifficulty,
   computePartyStrength,
-  PARTY_SIZE_MAX,
-  PARTY_SIZE_MIN,
 } from "./encounterDifficulty";
 import { useCatalogStore } from "./stores/catalogStore";
 import { useEncounterStore } from "./stores/encounterStore";
+import { useSettingsStore } from "./stores/settingsStore";
 import type { Monster } from "./types";
 import { useEncounterUrlSync } from "./useEncounterUrlSync";
 
@@ -32,10 +30,10 @@ export function App(): JSX.Element {
   const fetchCatalog = useCatalogStore((s) => s.fetchCatalog);
 
   const encounter = useEncounterStore((s) => s.encounter);
-  const partySize = useEncounterStore((s) => s.partySize);
-  const setPartySize = useEncounterStore((s) => s.setPartySize);
   const addMonster = useEncounterStore((s) => s.addMonster);
   const removeEntry = useEncounterStore((s) => s.removeEntry);
+  const partySize = useSettingsStore((s) => s.partySize);
+  const setPartySize = useSettingsStore((s) => s.setPartySize);
 
   const encounterRoles = useMemo(
     () => encounter.map((e) => e.monster.role),
@@ -51,6 +49,8 @@ export function App(): JSX.Element {
   );
 
   const [addModalOpened, { open: openAddModal, close: closeAddModal }] =
+    useDisclosure(false);
+  const [settingsOpened, { open: openSettings, close: closeSettings }] =
     useDisclosure(false);
 
   useEffect(() => {
@@ -92,30 +92,6 @@ export function App(): JSX.Element {
           Энкаунтер
         </Title>
 
-        <Group align="center">
-          <Text span fw={700} component="span">
-            Группа{" "}
-          </Text>
-          
-          <div style={{ width: 100 }}>
-            <Slider
-              color="blue"
-              defaultValue={4}
-              min={3}
-              max={5}
-              marks={[
-                { value: 3, label: '3' },
-                { value: 4, label: '4' },
-                { value: 5, label: '5' },
-              ]}
-              value={partySize}
-              onChange={(v) => {
-                if (typeof v === "number") setPartySize(v);
-              }}
-            />
-          </div>
-        </Group>
-
         <Text size="sm">
           Сложность:{" "}
           <Text span fw={700} component="span">
@@ -130,7 +106,12 @@ export function App(): JSX.Element {
           </Text>
         </Text>
 
-        <Button onClick={openAddModal}>Добавить</Button>
+        <Group>
+          <Button variant="default" onClick={openSettings}>
+            Настройки
+          </Button>
+          <Button onClick={openAddModal}>Добавить</Button>
+        </Group>
       </Group>
 
       <AddMonsterModal
@@ -138,6 +119,12 @@ export function App(): JSX.Element {
         onClose={closeAddModal}
         monsters={monsters}
         onPick={pickMonster}
+      />
+      <SettingsDrawer
+        opened={settingsOpened}
+        onClose={closeSettings}
+        partySize={partySize}
+        onPartySizeChange={setPartySize}
       />
 
       {encounter.length === 0 ? (

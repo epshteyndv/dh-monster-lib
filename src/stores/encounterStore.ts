@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { clampPartySize } from "../encounterDifficulty";
 import {
   encounterReducer,
   type EncounterEntry,
@@ -8,9 +7,6 @@ import {
 import type { Monster } from "../types";
 
 export type EncounterStore = EncounterState & {
-  /** Party size for encounter difficulty (Minion groups); clamped 1–12 in `setPartySize`. */
-  partySize: number;
-  setPartySize: (n: number) => void;
   addMonster: (monster: Monster) => void;
   removeEntry: (instanceId: string) => void;
   setEncounterFromIds: (
@@ -21,11 +17,6 @@ export type EncounterStore = EncounterState & {
 
 export const useEncounterStore = create<EncounterStore>((set) => ({
   encounter: [],
-  partySize: 4,
-  setPartySize: (n) =>
-    set(() => ({
-      partySize: clampPartySize(n),
-    })),
   addMonster: (monster) =>
     set((s) => ({
       ...s,
