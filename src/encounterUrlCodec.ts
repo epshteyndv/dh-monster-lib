@@ -3,12 +3,12 @@ import {
   decompressFromEncodedURIComponent,
 } from "lz-string";
 
-/** Query param name for the encoded encounter payload (normal browsing). */
+/** Legacy query param for encoded encounter payload; stripped on load (working state is localStorage). */
 export const ENCOUNTER_URL_PARAM = "enc";
 
 /**
- * Query param for one-shot share links. Same payload encoding as {@link ENCOUNTER_URL_PARAM};
- * after load the app replaces the URL with `enc` only.
+ * Query param for one-shot share links. Same LZ-encoded wire format as {@link ENCOUNTER_URL_PARAM};
+ * after load the app removes `share` and `enc` from the URL and persists state to localStorage.
  */
 export const ENCOUNTER_SHARE_URL_PARAM = "share";
 
@@ -52,4 +52,16 @@ export function decodeEncounterPayload(encoded: string): EncounterUrlPayload | n
 
 export function encounterToPayload(ids: string[]): EncounterUrlPayload {
   return { v: ENCOUNTER_URL_VERSION, ids };
+}
+
+/** Parse JSON (e.g. from localStorage), not LZString-wrapped. */
+export function parseEncounterJsonPayload(jsonText: string): EncounterUrlPayload | null {
+  try {
+    const parsed: unknown = JSON.parse(jsonText);
+    if (!isEncounterUrlPayload(parsed)) return null;
+    if (parsed.v !== ENCOUNTER_URL_VERSION) return null;
+    return parsed;
+  } catch {
+    return null;
+  }
 }

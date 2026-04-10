@@ -23,7 +23,7 @@ import {
 import { useCatalogStore } from "./stores/catalogStore";
 import { useEncounterStore } from "./stores/encounterStore";
 import type { Monster } from "./types";
-import { useEncounterUrlSync } from "./useEncounterUrlSync";
+import { useEncounterPersistence } from "./useEncounterPersistence";
 
 type EncounterGroup = {
   monster: Monster;
@@ -89,7 +89,7 @@ export function EncounterPage(): JSX.Element {
     void fetchCatalog();
   }, [fetchCatalog]);
 
-  useEncounterUrlSync({ loading, monsters });
+  useEncounterPersistence({ loading, monsters });
 
   const pickMonster = (m: Monster) => {
     addMonster(m);

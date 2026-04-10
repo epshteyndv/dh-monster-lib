@@ -29,7 +29,7 @@ The application SHALL use **`react-router-dom`** as the client-side routing libr
 
 The initial route map SHALL include at least one route that hosts the **encounter** experience (monster catalog overlay, encounter cards, header controls including any share affordance) so that all existing encounter-related requirements remain reachable after the router is introduced.
 
-Encounter URL behaviors (**`enc`**, **`share`**, replace-style updates) SHALL continue to satisfy **Encounter state in URL**, **URL history behavior**, and **Encounter share link entry and redirect**; implementation MAY use React Router primitives (for example **`useSearchParams`**, **`replace: true`** navigations) instead of direct `window.location` / `history` manipulation where equivalent.
+Encounter behaviors involving **`share`**, legacy **`enc`** cleanup, **localStorage** persistence (**Encounter state persistence in localStorage**), and URL canonicalization (**Encounter share link entry and redirect**, **Encounter state in URL**) SHALL remain satisfied; implementation MAY use React Router primitives (for example **`useSearchParams`**, **`replace: true`** navigations) instead of direct `window.location` / `history` manipulation where equivalent.
 
 #### Scenario: App boots inside the router
 
@@ -38,8 +38,8 @@ Encounter URL behaviors (**`enc`**, **`share`**, replace-style updates) SHALL co
 
 #### Scenario: Encounter query parameters under subpath
 
-- **WHEN** the user opens the encounter app under a non-root base path with **`enc`** or **`share`** query parameters as specified elsewhere
-- **THEN** the same hydration and canonicalization behaviors MUST apply as before the router adoption (no regression solely due to `basename`).
+- **WHEN** the user opens the encounter app under a non-root base path with **`enc`**, **`share`**, or related query parameters as specified elsewhere
+- **THEN** the same bootstrap, canonicalization, and localStorage restore behaviors MUST apply as before the router adoption (no regression solely due to `basename`).
 
 ### Requirement: Monster list and detail view
 
@@ -149,7 +149,7 @@ The monster **catalog** list (including the list inside the add-to-encounter ove
 
 ### Requirement: Encounter composition
 
-The application SHALL maintain client-side state **encounter**: an ordered sequence of **entries**. Each entry MUST reference exactly one monster from the loaded catalog data and MUST carry a unique **instance identifier** distinct from the catalog monster `id`, so that the same catalog monster MAY appear in multiple entries. The application MAY persist the **ordered list of catalog `id` values** in the URL as specified in **Encounter state in URL** so that the encounter can be restored after navigation or reload.
+The application SHALL maintain client-side state **encounter**: an ordered sequence of **entries**. Each entry MUST reference exactly one monster from the loaded catalog data and MUST carry a unique **instance identifier** distinct from the catalog monster `id`, so that the same catalog monster MAY appear in multiple entries. The application MAY persist the **ordered list of catalog `id` values** as specified in **Encounter state persistence in localStorage** and **Encounter state in URL** so that the encounter can be restored after navigation or reload.
 
 #### Scenario: Duplicate catalog monsters allowed
 
@@ -163,67 +163,56 @@ The application SHALL maintain client-side state **encounter**: an ordered seque
 
 ### Requirement: Encounter share link entry and redirect
 
-The application SHALL support a **share entry flow** separate from the normal **`enc`** URL sync: a dedicated query parameter **`share`** whose **value encoding, versioning, and JSON payload shape** MUST match the **`enc`** parameter rules defined in **Encounter state in URL** (LZString compression via **`lz-string`**, same versioned payload with ordered catalog `id` list).
+The application SHALL support a **share entry flow** via query parameter **`share`**, but this flow SHALL be separate from regular ongoing state persistence. The `share` payload encoding and versioning MUST remain compatible with the encounter payload format used by the app (versioned ordered id list, typed decode/validation behavior).
 
-The application MUST expose a **dedicated control** (for example a header button) that lets the user obtain a **full share URL** containing the **`share`** query parameter reflecting the **current** encounter composition (same id sequence semantics as **`enc`**, including duplicates). This control MUST NOT be required for normal encounter editing; it is an optional sharing affordance.
+The application MUST expose a dedicated sharing control (for example a header button) that lets the user obtain a full URL containing `share=` for explicit sharing.
 
-When the user opens the application with a **`share`** parameter:
+When the user opens the application with a `share` parameter and the catalog is loaded:
 
-- **WHEN** the catalog has finished loading successfully and **`share`** decodes to a valid payload for the current wire version
-- **THEN** the application MUST populate the encounter from the decoded id list using the same **skip unknown ids / preserve order** rules as **`enc`** hydration
-- **AND THEN** the application MUST update the browser URL via **`history.replaceState`** (or equivalent) so that **`share` is removed**, the path remains the **normal application entry path** (respecting the configured base path), and the **`enc`** query parameter reflects the resulting encounter (or **`enc`** is omitted when the encounter is empty), with **no full page reload** and **no new history entry** solely for this canonicalization step.
+- **THEN** the encounter MUST be populated from the decoded `share` payload (skipping unknown ids, preserving valid order and duplicates),
+- **AND THEN** the application MUST canonicalize to the main page URL by removing `share` via replace semantics,
+- **AND** the resulting current encounter state MUST be persisted to `localStorage` as the active working state.
 
-#### Scenario: Share URL opens and lands on canonical enc URL
+#### Scenario: Share URL applies state and returns to main URL
 
-- **WHEN** the user opens a URL that contains a valid **`share`** value and the catalog loads
-- **THEN** the encounter MUST match the shared id sequence (after unknown-id handling)
-- **AND** the visible URL MUST NOT retain **`share`** after processing
-- **AND** the **`enc`** parameter MUST be consistent with the displayed encounter (or absent if empty).
+- **WHEN** the user opens a valid `share` URL and catalog load succeeds
+- **THEN** encounter state MUST be applied from `share`
+- **AND** the visible URL MUST NOT keep `share` afterward
+- **AND** the applied state MUST become the current persisted local state.
 
-#### Scenario: Invalid or missing share payload
+#### Scenario: Invalid share payload does not break app
 
-- **WHEN** the **`share`** parameter is present but does not decode to a valid payload for the current version
-- **THEN** the application MUST NOT crash
-- **AND** the application SHOULD remove **`share`** from the URL via replace semantics where practical, without requiring a reload.
-
-#### Scenario: Dedicated control provides share link
-
-- **WHEN** the user activates the dedicated sharing control
-- **THEN** the user MUST be able to obtain (for example copy) a URL containing **`share=`** with the current encounter encoded
-- **AND** the URL MUST be valid for the deployed base path (project Pages subpath when applicable).
-
-#### Scenario: Share redirect uses replace not push
-
-- **WHEN** the share entry flow runs after catalog load
-- **THEN** URL canonicalization from **`share`** to **`enc`** MUST use **replace** semantics so the browser back button does not return to the raw **`share`** URL as an extra history step attributable only to this redirect.
+- **WHEN** `share` is invalid for current payload/version rules
+- **THEN** the UI MUST NOT crash
+- **AND** the URL SHOULD be cleaned from `share` using replace behavior where practical.
 
 ### Requirement: Encounter state in URL
 
-The application SHALL serialize the encounter’s **catalog identity order** to the page URL so that reloading or opening the same URL restores the same sequence of monsters (including duplicates). Serialization SHALL use a **versioned JSON** payload (extensible for future fields) as a UTF-8 string, then **compressed for the URL** using the **LZString** algorithm via the **`lz-string`** library (for example `compressToEncodedURIComponent` / `decompressFromEncodedURIComponent`), so the value stored in the query string is URL-safe and typically shorter than the prior uncompressed Base64 URL-safe encoding. The encoded value SHALL appear in a single **query parameter** (for example `enc`). The application MAY additionally accept the same encoded payload in a separate **`share`** query parameter for the **share entry flow** described in **Encounter share link entry and redirect**; that flow SHALL canonicalize to **`enc`** after hydration. The application SHALL NOT be required to decode or migrate links produced by the previous Base64 URL-safe-only encoder.
+The application SHALL NOT treat URL query parameters as the primary persistence mechanism for the **current working encounter state** during normal editing. Instead, ongoing encounter state persistence SHALL be handled by **localStorage** as defined in **Encounter state persistence in localStorage**. URL payload parameters MAY still be used for explicit share-entry import flows.
 
-#### Scenario: Restore after reload
+#### Scenario: Edit does not rewrite enc parameter
 
-- **WHEN** the user opens a URL that contains a valid encounter payload and the catalog has loaded
-- **THEN** the encounter MUST be populated to match the decoded monster id sequence (unknown ids MAY be skipped; valid ids MUST be applied in order).
+- **WHEN** the user adds or removes monsters in the encounter during normal usage
+- **THEN** the app MUST persist state locally and MUST NOT require writing `enc` into the URL on each edit.
 
-#### Scenario: Share link
+### Requirement: Encounter state persistence in localStorage
 
-- **WHEN** two users open the same URL with the same `enc` value after the catalog loads
-- **THEN** both MUST see the same encounter composition (same ids in the same order).
+The application SHALL persist the current encounter composition in **`localStorage`** so that reloads and revisits in the same browser restore the last working encounter state without requiring URL query parameters. Persisted data MUST preserve ordered catalog ids and duplicates; unknown ids at restore time MAY be skipped.
 
-#### Scenario: URL updates on edit
+#### Scenario: Reload restores from localStorage
 
-- **WHEN** the user adds or removes monsters in the encounter
-- **THEN** the URL query parameter MUST be updated to reflect the new state without requiring a full page reload.
+- **WHEN** the user edits encounter state and reloads the page in the same browser profile
+- **THEN** the encounter MUST be restored from localStorage to the last persisted valid state.
 
-### Requirement: URL history behavior
+#### Scenario: Empty encounter persistence
 
-Updates to the encounter-driven query parameter SHALL use **`history.replaceState`** (or equivalent) so that normal encounter editing does not create a deep stack of history entries for each keystroke-level change.
+- **WHEN** the encounter becomes empty
+- **THEN** persisted local encounter state MUST represent emptiness (for example by clearing the storage key or storing an empty valid payload), and subsequent reload MUST show an empty encounter.
 
-#### Scenario: No history spam
+#### Scenario: Storage access failure
 
-- **WHEN** the user adds several monsters in one session
-- **THEN** the browser back button MUST NOT require one undo per add solely for URL updates (replace semantics).
+- **WHEN** reading from or writing to localStorage throws (for example quota/privacy mode restrictions)
+- **THEN** the application MUST continue running without crash and SHOULD gracefully fall back to in-memory state for the session.
 
 ### Requirement: Encounter cards and removal
 
