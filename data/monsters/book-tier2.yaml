@@ -154,7 +154,7 @@ monsters:
           The Box can be spotlighted up to two times per GM turn. Spend Fear as usual to spotlight them.
       - name: Randomized Tactics
         type: action
-        description: >-
+        description: |-
           Mark a Stress and roll a d6. The Box uses the corresponding move:
           1. Mana Beam. The Box fires a searing beam. Make an attack against a target within Far range. On a success, deal 2d10+2 magic damage.
           2. Fire Jets. The Box shoots into the air, spinning and releasing jets of flame. Make an attack against all targets within Close range. Targets the Box succeeds against take 2d8 physical damage.
