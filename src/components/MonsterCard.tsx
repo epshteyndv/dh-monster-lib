@@ -1,4 +1,5 @@
 import { Card, CloseButton, Group, Paper, Stack, Text, Title } from "@mantine/core";
+import { Fragment } from "react";
 import { formatMonsterTierLine } from "../formatMonsterTierLine";
 import type { Monster, MonsterFeature } from "../types";
 
@@ -7,6 +8,34 @@ const TYPE_LABEL: Record<string, string> = {
   action: "Action",
   reaction: "Reaction",
 };
+
+const FEATURE_DESC_KEYWORD_RE = /\b(Stress|Fear)\b/g;
+
+type FeatureDescriptionSegment =
+  | { kind: "text"; text: string }
+  | { kind: "keyword"; keyword: "Stress" | "Fear" };
+
+/** Splits feature description for whole-word Stress/Fear highlighting (exact case). */
+function splitFeatureDescriptionForHighlights(description: string): FeatureDescriptionSegment[] {
+  const segments: FeatureDescriptionSegment[] = [];
+  let lastIndex = 0;
+  const re = new RegExp(FEATURE_DESC_KEYWORD_RE.source, "g");
+  let match: RegExpExecArray | null;
+  while ((match = re.exec(description)) !== null) {
+    if (match.index > lastIndex) {
+      segments.push({ kind: "text", text: description.slice(lastIndex, match.index) });
+    }
+    segments.push({ kind: "keyword", keyword: match[1] as "Stress" | "Fear" });
+    lastIndex = match.index + match[0].length;
+  }
+  if (lastIndex < description.length) {
+    segments.push({ kind: "text", text: description.slice(lastIndex) });
+  }
+  if (segments.length === 0) {
+    segments.push({ kind: "text", text: description });
+  }
+  return segments;
+}
 
 function FeatureBlock({ f }: { f: MonsterFeature }): JSX.Element {
   const ty = TYPE_LABEL[f.type] ?? f.type;
@@ -22,7 +51,15 @@ function FeatureBlock({ f }: { f: MonsterFeature }): JSX.Element {
       </Text>
       {" "}
       <Text span size="sm" mt={6} style={{ whiteSpace: "pre-wrap" }}>
-        {f.description}
+        {splitFeatureDescriptionForHighlights(f.description).map((seg, i) =>
+          seg.kind === "keyword" ? (
+            <Text key={i} component="span" span size="sm" fw={700} fs="italic">
+              {seg.keyword}
+            </Text>
+          ) : (
+            <Fragment key={i}>{seg.text}</Fragment>
+          )
+        )}
       </Text>
     </div>
   );
